@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DisplayMessageActivity2">
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="393dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:text="[My Gym] | Account | Setting"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="156dp"
+        android:layout_height="55dp"
+        android:text="Search Gym (dropdown)"
+        tools:layout_editor_absoluteX="219dp"
+        tools:layout_editor_absoluteY="80dp" />
+
+    <Button
+        android:id="@+id/button15"
+        android:layout_width="193dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:text="Selected gym"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="80dp" />
+
+    <Button
+        android:id="@+id/button36"
+        android:layout_width="356dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="16dp"
+        android:text="Add wall"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="168dp" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="355dp"
+        android:layout_height="220dp"
+        android:layout_marginStart="16dp"
+        android:text="Wall #1"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="264dp" />
+
+    <Button
+        android:id="@+id/button11"
+        android:layout_width="355dp"
+        android:layout_height="220dp"
+        android:layout_marginStart="20dp"
+        android:text="Wall #2"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="521dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

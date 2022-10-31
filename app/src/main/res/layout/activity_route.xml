@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Route">
+
+    <Button
+        android:id="@+id/button35"
+        android:layout_width="358dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="16dp"
+        android:text="My Attempt/Comment"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="501dp" />
+
+    <Button
+        android:id="@+id/button32"
+        android:layout_width="162dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="16dp"
+        android:text="View Route in AR"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="419dp" />
+
+    <Button
+        android:id="@+id/button33"
+        android:layout_width="162dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="212dp"
+        android:text="Delete Route"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="419dp" />
+
+    <Button
+        android:id="@+id/button34"
+        android:layout_width="162dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="212dp"
+        android:text="Delete Route"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="419dp" />
+
+    <Button
+        android:id="@+id/button31"
+        android:layout_width="359dp"
+        android:layout_height="223dp"
+        android:layout_marginStart="16dp"
+        android:text="Route #1(V7) - Image"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="170dp" />
+
+    <Button
+        android:id="@+id/button30"
+        android:layout_width="363dp"
+        android:layout_height="66dp"
+        android:layout_marginStart="16dp"
+        android:text="Selected Gym - Wall - Route #1(V7)"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="80dp" />
+
+    <Button
+        android:id="@+id/button26"
+        android:layout_width="393dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:text="[My Gym] | Account | Setting"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
