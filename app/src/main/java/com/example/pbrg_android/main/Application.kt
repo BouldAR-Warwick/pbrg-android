@@ -9,7 +9,7 @@ import com.tencent.mmkv.MMKV
 import java.lang.reflect.Type
 
 
-class application : Application() {
+class Application : Application() {
 
     companion object{
         @SuppressLint("StaticFieldLeak")
