@@ -65,16 +65,20 @@ class LoginActivity : AppCompatActivity() {
             finish()
         })
 
-        username.afterTextChanged {
-            loginViewModel.loginDataChanged(
+        username.afterTextChanged { it ->
+            loginViewModel.usernameChanged(it)
+
+            loginViewModel.checkWholeForm(
                 username.text.toString(),
                 password.text.toString()
             )
         }
 
         password.apply {
-            afterTextChanged {
-                loginViewModel.loginDataChanged(
+            afterTextChanged { it ->
+                loginViewModel.passwordChanged(it)
+
+                loginViewModel.checkWholeForm(
                     username.text.toString(),
                     password.text.toString()
                 )

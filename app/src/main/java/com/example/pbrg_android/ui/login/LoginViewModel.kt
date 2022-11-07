@@ -29,13 +29,32 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
-        if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
-        } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
-        } else {
+    fun checkWholeForm(username: String, password: String) {
+        // check username, password
+        val usernameValid = isUserNameValid(username)
+        val passwordValid = isPasswordValid(password)
+
+        val allValid = usernameValid && passwordValid;
+
+        // form is valid check
+        if (allValid) {
             _loginForm.value = LoginFormState(isDataValid = true)
+        }
+    }
+
+    fun usernameChanged(username: String) {
+        // check username
+        val usernameValid = isUserNameValid(username)
+        if (!usernameValid) {
+            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username);
+        }
+    }
+
+    fun passwordChanged(password: String) {
+        // check password
+        val passwordValid = isPasswordValid(password)
+        if (!passwordValid) {
+            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
         }
     }
 
