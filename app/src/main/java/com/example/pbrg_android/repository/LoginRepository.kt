@@ -1,12 +1,9 @@
 package com.example.pbrg_android.repository
 
-import com.example.pbrg_android.database.DatabaseManager
-import com.example.pbrg_android.database.UsersTable
 import com.example.pbrg_android.utility.LoginInfo
 import com.google.gson.Gson
 import com.google.gson.internal.`$Gson$Types`
 import com.tencent.mmkv.MMKV
-import org.ktorm.dsl.*
 import java.lang.reflect.Type
 
 
@@ -16,35 +13,6 @@ import java.security.MessageDigest
 
 
 class LoginRepository {
-
-    private val database = DatabaseManager().database
-
-    fun login(userName : String, password : String) {
-
-        val query = database.from(UsersTable).select().where{ UsersTable.username eq userName }
-        if (query.rowSet.next()) {
-            if (hash(password) == query.rowSet[UsersTable.password]) {
-                // information correct move to user page
-                // cache the login info
-                val kv = MMKV.defaultMMKV()
-                //TODO: add keeplogin para
-                //if keeplogin is chosen then expire in 7 days
-                val expireTime = 7*86400*1000L + System.currentTimeMillis()
-                val loginInfo = LoginInfo(query.rowSet[UsersTable.uid]!!)
-                kv.encode("login_info", loginInfo.toMyJson())
-
-                println("-===================authed")
-
-            } else {
-                // wrong password
-
-            }
-        } else {
-            // user not exist
-
-        }
-
-    }
 
     fun hash(input:String): String {
         val md = MessageDigest.getInstance("SHA-256")

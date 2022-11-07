@@ -16,7 +16,7 @@ class BootActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?){
         setContentView(R.layout.activity_boot)
-//        TimeUnit.SECONDS.sleep(5L)
+
         super.onCreate(savedInstanceState)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())

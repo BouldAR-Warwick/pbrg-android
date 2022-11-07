@@ -17,20 +17,20 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("created")
-        Application.login_info = if (MMKV.defaultMMKV().containsKey("login_info")){
+
+        if (MMKV.defaultMMKV().containsKey("login_info")){
             // have login info cached
-            MMKV.defaultMMKV().decodeString("login_info")!!.toMyObject<LoginInfo>()[0]
+             Application.login_info = MMKV.defaultMMKV().decodeString("login_info")!!.toMyObject<LoginInfo>()[0]
             // continue to destination
         } else {
+            // otherwise initialise login_info
+            Application.login_info = LoginInfo()
             // Load log in page
             setContentView(R.layout.activity_login)
-            intent = Intent(this, LoginActivity::class.java )
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.addCategory("login")
             startActivity(intent)
             finish()
-            // otherwise initialise login_info
-            LoginInfo()
-
         }
     }
 
