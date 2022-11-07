@@ -17,6 +17,10 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
+    fun checkLoginStatus() {
+
+    }
+
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
         val result = loginRepository.login(username, password)
@@ -34,7 +38,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         val usernameValid = isUserNameValid(username)
         val passwordValid = isPasswordValid(password)
 
-        val allValid = usernameValid && passwordValid;
+        val allValid = usernameValid && passwordValid
 
         // form is valid check
         if (allValid) {
@@ -46,7 +50,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         // check username
         val usernameValid = isUserNameValid(username)
         if (!usernameValid) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username);
+            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         }
     }
 

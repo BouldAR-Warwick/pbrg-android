@@ -19,11 +19,11 @@ class LoginRepository {
 
     private val database = DatabaseManager().database
 
-    fun userAuthorise(userName : String, password : String) {
+    fun login(userName : String, password : String) {
 
         val query = database.from(UsersTable).select().where{ UsersTable.username eq userName }
         if (query.rowSet.next()) {
-            if (md5(password) == query.rowSet[UsersTable.password]) {
+            if (hash(password) == query.rowSet[UsersTable.password]) {
                 // information correct move to user page
                 // cache the login info
                 val kv = MMKV.defaultMMKV()
@@ -32,6 +32,9 @@ class LoginRepository {
                 val expireTime = 7*86400*1000L + System.currentTimeMillis()
                 val loginInfo = LoginInfo(query.rowSet[UsersTable.uid]!!)
                 kv.encode("login_info", loginInfo.toMyJson())
+
+                println("-===================authed")
+
             } else {
                 // wrong password
 
@@ -43,8 +46,8 @@ class LoginRepository {
 
     }
 
-    fun md5(input:String): String {
-        val md = MessageDigest.getInstance("MD5")
+    fun hash(input:String): String {
+        val md = MessageDigest.getInstance("SHA-256")
         return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
     }
 
