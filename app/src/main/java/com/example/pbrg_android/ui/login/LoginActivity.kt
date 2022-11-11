@@ -1,6 +1,7 @@
 package com.example.pbrg_android.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -14,12 +15,14 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.pbrg_android.databinding.ActivityLoginBinding
 
-import com.example.pbrg_android.R
+import com.example.pbrg_android.activities.MainPageActivity
+
+const val EXTRA_MESSAGE = "com.example.pbrg_android.MESSAGE"
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,19 +106,26 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
         // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
+
+//        val welcome = getString(R.string.welcome)
+        val displayName = model.displayName
+//        Toast.makeText(
+//            applicationContext,
+//            "$welcome $displayName",
+//            Toast.LENGTH_LONG
+//        ).show()
+
+        val intent = Intent(this, MainPageActivity::class.java).apply{
+            putExtra(EXTRA_MESSAGE, displayName)
+        }
+        startActivity(intent)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
+
 }
 
 /**

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Pbrg_android</string>
+    <!-- Strings related to Navigation -->
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -11,4 +13,13 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <!-- Strings related to Gym -->
+    <string name="Gym">Gym</string>
+    <string name="title_activity_main_page">MainPageActivity</string>
+    <string name="selected_gym">Selected Gym</string>
+    <string name="add_wall">Add Wall</string>
+
+
+
 </resources>
