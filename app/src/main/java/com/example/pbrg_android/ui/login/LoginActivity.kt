@@ -12,7 +12,13 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.example.pbrg_android.R
 import com.example.pbrg_android.databinding.ActivityLoginBinding
 
 import com.example.pbrg_android.activities.MainPageActivity
@@ -98,6 +104,7 @@ class LoginActivity : AppCompatActivity() {
                 false
             }
 
+
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
                 loginViewModel.login(username.text.toString(), password.text.toString())
@@ -115,16 +122,18 @@ class LoginActivity : AppCompatActivity() {
 //            "$welcome $displayName",
 //            Toast.LENGTH_LONG
 //        ).show()
-
         val intent = Intent(this, MainPageActivity::class.java).apply{
             putExtra(EXTRA_MESSAGE, displayName)
         }
         startActivity(intent)
+
+
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
+
 
 }
 
