@@ -1,6 +1,7 @@
 package com.example.pbrg_android.data
 
 import com.example.pbrg_android.data.model.LoggedInUser
+import com.example.pbrg_android.utility.Result
 
 /**
  * Class that requests authentication and user information from the remote data source and

@@ -1,4 +1,4 @@
-package com.example.pbrg_android.data
+package com.example.pbrg_android.utility
 
 /**
  * A generic class that holds a value with its loading status.

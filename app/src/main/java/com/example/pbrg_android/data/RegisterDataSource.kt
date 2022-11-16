@@ -1,40 +1,27 @@
 package com.example.pbrg_android.data
 
+
 import android.content.Context
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.pbrg_android.data.model.LoggedInUser
-import com.example.pbrg_android.data.model.LoginData
+import com.example.pbrg_android.data.model.RegisterData
 import com.example.pbrg_android.utility.Result
 import com.google.gson.Gson
-import com.google.gson.internal.`$Gson$Types`
 import org.json.JSONObject
 import java.io.IOException
-import java.lang.reflect.Type
-import java.math.BigInteger
-import java.security.MessageDigest
 import javax.inject.Inject
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
-class LoginDataSource @Inject constructor(private val context: Context) {
+class RegisterDataSource @Inject constructor(private val context: Context) {
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun register(registerData: RegisterData) : Result<LoggedInUser> {
         try {
             // TODO: handle loggedInUser authentication
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
-            return Result.Success(fakeUser)
-        } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
-        }
-    }
-
-    fun login(loginData: LoginData) : Result<LoggedInUser> {
-        try {
-            // TODO: handle loggedInUser authentication
-            val data = JSONObject(Gson().toJson(loginData))
+            val data = JSONObject(Gson().toJson(registerData))
             var result : Result<LoggedInUser>
             val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
             result = Result.Success(fakeUser)
@@ -72,23 +59,5 @@ class LoginDataSource @Inject constructor(private val context: Context) {
 
     fun logout() {
         // TODO: revoke authentication
-    }
-
-    fun hash(input:String): String {
-        val md = MessageDigest.getInstance("SHA-256")
-        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
-    }
-
-    private fun Any.toMyJson(): String? {
-        return Gson().toJson(this)
-    }
-
-    inline fun <reified T> String.toMyObject(): List<T> {
-        val listType: Type = `$Gson$Types`.newParameterizedTypeWithOwner(null, ArrayList::class.java, T::class.java)
-        return if(!contains("[")){
-            Gson().fromJson("[${this}]", listType)
-        }else{
-            Gson().fromJson(this, listType)
-        }
     }
 }

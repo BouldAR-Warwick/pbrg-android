@@ -48,8 +48,8 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1' // HTTP library https://developer.android.com/training/volley
     implementation 'com.tencent:mmkv-static:1.2.14'
     implementation 'com.google.code.gson:gson:2.10'
-    implementation 'com.google.dagger:dagger:2.40' // Dependency injection, build dependency garph
-    kapt 'com.google.dagger:dagger-compiler:2.40' // Compiler required by Dagger
+    implementation "com.google.dagger:dagger:2.44.2" // Dependency injection, build dependency garph
+    kapt "com.google.dagger:dagger-compiler:2.44.2" // Compiler required by Dagger
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

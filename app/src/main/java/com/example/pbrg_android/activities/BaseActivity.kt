@@ -4,8 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pbrg_android.R
-import com.example.pbrg_android.main.Application
-import com.example.pbrg_android.ui.login.LoginActivity
+import com.example.pbrg_android.Application
 import com.example.pbrg_android.utility.LoginInfo
 import com.google.gson.Gson
 import com.google.gson.internal.`$Gson$Types`

@@ -1,4 +1,4 @@
-package com.example.pbrg_android.ui.login
+package com.example.pbrg_android.login
 
 /**
  * Authentication result : success (user details) or error message.

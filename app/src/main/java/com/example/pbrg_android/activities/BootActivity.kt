@@ -1,26 +1,23 @@
 package com.example.pbrg_android.activities
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.pbrg_android.R
-import android.view.View
-import androidx.lifecycle.ViewModelProvider
-import com.example.pbrg_android.databinding.ActivityLoginBinding
-import com.example.pbrg_android.ui.login.LoginViewModel
-import com.example.pbrg_android.ui.login.LoginViewModelFactory
-import com.tencent.mmkv.MMKV
-import java.util.concurrent.TimeUnit
+import com.example.pbrg_android.Application
+import com.example.pbrg_android.login.LoginViewModel
+import javax.inject.Inject
 
 class BootActivity : BaseActivity() {
-    private lateinit var loginViewModel: LoginViewModel
+    @Inject
+    lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?){
+
+        (application as Application).appComponent.loginComponent().create().inject(this)
+
         setContentView(R.layout.activity_boot)
 
         super.onCreate(savedInstanceState)
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
 
         loginViewModel.checkLoginStatus()
 

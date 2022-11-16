@@ -1,4 +1,4 @@
-package com.example.pbrg_android.activities
+package com.example.pbrg_android.main
 
 import android.os.Bundle
 import android.widget.TextView
@@ -9,26 +9,35 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.pbrg_android.R
+import com.example.pbrg_android.login.EXTRA_MESSAGE
+import com.example.pbrg_android.Application
 import org.json.JSONObject
 
-interface MyCallback{
-    fun onCallback(response:Boolean)
-}
-
-class MainPageActivity : AppCompatActivity(), MyCallback {
+class MainActivity : AppCompatActivity(){
     val myCallback = this
-    override fun onCallback(response:Boolean) {
 
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_page)
-        setSupportActionBar(findViewById(R.id.my_toolbar))
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        displayUsername()
-//        httpGet()
-        postJSON()
+
+        val userManager = (application as Application).appComponent.userManager()
+
+        if (!userManager.isUserLoggedIn()) {
+            // return to login page if user is not logged in
+        } else {
+            setContentView(R.layout.activity_main_page)
+            setSupportActionBar(findViewById(R.id.my_toolbar))
+//          supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+            displayUsername()
+//           httpGet()
+            postJSON()
+            // If the MainActivity needs to be displayed, we get the UserComponent
+            // from the application graph and gets this Activity injected
+            userManager.userComponent!!.inject(this)
+
+        }
+
     }
 
 
@@ -36,7 +45,7 @@ class MainPageActivity : AppCompatActivity(), MyCallback {
 
     private fun displayUsername() {
         // Extract the string from the Intent that started this activity
-        val username = intent.getStringExtra(com.example.pbrg_android.ui.login.EXTRA_MESSAGE)
+        val username = intent.getStringExtra(EXTRA_MESSAGE)
 
         // Capture the layout's TextView and set the string as its text
         val textView = findViewById<TextView>(R.id.displayName).apply {
@@ -78,11 +87,9 @@ class MainPageActivity : AppCompatActivity(), MyCallback {
                     val JSONObj = response.getString("Status")
                     if(JSONObj=="200"){
                         //return true
-                        myCallback.onCallback(true)
                         textView.text = "Response is OK"
                     }
                     else{
-                        myCallback.onCallback(false)
                     }
                 }, Response.ErrorListener {
                     // return  false

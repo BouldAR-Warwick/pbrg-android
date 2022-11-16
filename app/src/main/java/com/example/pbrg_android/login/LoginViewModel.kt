@@ -1,17 +1,17 @@
-package com.example.pbrg_android.ui.login
+package com.example.pbrg_android.login
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import android.util.Patterns
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import com.example.pbrg_android.data.LoginRepository
-import com.example.pbrg_android.data.Result
+import com.example.pbrg_android.utility.Result
+
+import javax.inject.Inject
 
 import com.example.pbrg_android.R
+import com.example.pbrg_android.user.UserManager
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(private val userManager: UserManager) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -25,7 +25,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        val result = userManager.login(username, password)
 
         if (result is Result.Success) {
             _loginResult.value =

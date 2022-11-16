@@ -1,4 +1,4 @@
-package com.example.pbrg_android.ui.login
+package com.example.pbrg_android.login
 
 /**
  * User details post authentication that is exposed to the UI

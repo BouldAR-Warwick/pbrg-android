@@ -1,4 +1,4 @@
-package com.example.pbrg_android.ui.login
+package com.example.pbrg_android.login
 
 /**
  * Data validation state of the login form.

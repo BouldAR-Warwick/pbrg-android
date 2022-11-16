@@ -1,9 +1,8 @@
-package com.example.pbrg_android.ui.login
+package com.example.pbrg_android.login
 
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -12,25 +11,30 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.example.pbrg_android.R
+import com.example.pbrg_android.main.MainActivity
 import com.example.pbrg_android.databinding.ActivityLoginBinding
 
-import com.example.pbrg_android.activities.MainPageActivity
+import com.example.pbrg_android.Application
+import javax.inject.Inject
 
 const val EXTRA_MESSAGE = "com.example.pbrg_android.MESSAGE"
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var loginViewModel: LoginViewModel
+
+    // @Inject annotated fields will be provided by Dagger
+    @Inject
+    lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // Creates an instance of Login component by grabbing the factory from the app graph
+        // and injects this activity to that Component
+        (application as Application).appComponent.loginComponent().create().inject(this)
+
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -41,8 +45,8 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val loading = binding.loading
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
+//        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
+//            .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -122,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
 //            "$welcome $displayName",
 //            Toast.LENGTH_LONG
 //        ).show()
-        val intent = Intent(this, MainPageActivity::class.java).apply{
+        val intent = Intent(this, MainActivity::class.java).apply{
             putExtra(EXTRA_MESSAGE, displayName)
         }
         startActivity(intent)
