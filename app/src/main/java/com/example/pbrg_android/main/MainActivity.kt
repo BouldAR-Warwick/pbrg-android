@@ -3,6 +3,7 @@ package com.example.pbrg_android.main
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -26,6 +27,8 @@ class MainActivity : AppCompatActivity(){
             // return to login page if user is not logged in
         } else {
             setContentView(R.layout.activity_main_page)
+            var toolbar: Toolbar = findViewById(R.id.my_toolbar)
+            toolbar.setTitle("")
             setSupportActionBar(findViewById(R.id.my_toolbar))
 //          supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 

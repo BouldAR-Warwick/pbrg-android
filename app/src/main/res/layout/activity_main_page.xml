@@ -14,14 +14,31 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:id="@+id/logo"
+            android:layout_width="96dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_launcher_background" />
+            android:layout_gravity="left|center_vertical"
+            android:layout_margin="0dp"
+            android:cropToPadding="false"
+            android:padding="8dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/displayName"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_gravity="right|center_vertical"
+            android:text="Username" />
+
     </androidx.appcompat.widget.Toolbar>
 
     <Button
@@ -69,16 +86,6 @@
         android:layout_marginStart="72dp"
         android:layout_marginTop="696dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/displayName"
-        android:layout_width="85dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="308dp"
-        android:layout_marginTop="688dp"
-        android:text="Username"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

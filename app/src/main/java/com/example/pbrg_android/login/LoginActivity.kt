@@ -14,8 +14,8 @@ import android.widget.EditText
 import android.widget.Toast
 import com.example.pbrg_android.main.MainActivity
 import com.example.pbrg_android.databinding.ActivityLoginBinding
-
 import com.example.pbrg_android.Application
+import com.example.pbrg_android.data.model.LoggedInUser
 import javax.inject.Inject
 
 const val EXTRA_MESSAGE = "com.example.pbrg_android.MESSAGE"
@@ -29,11 +29,9 @@ class LoginActivity : AppCompatActivity() {
     lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         // Creates an instance of Login component by grabbing the factory from the app graph
         // and injects this activity to that Component
         (application as Application).appComponent.loginComponent().create().inject(this)
-
 
         super.onCreate(savedInstanceState)
 
@@ -44,9 +42,6 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.password
         val login = binding.login
         val loading = binding.loading
-
-//        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-//            .get(LoginViewModel::class.java)
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -116,11 +111,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        // TODO : initiate successful logged in experience
-
+    private fun updateUiWithUser(loggedInUser: LoggedInUser) {
+        // Initiate successful logged in experience
+        val displayName = loggedInUser.displayName
+        // display welcome popup
 //        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
 //        Toast.makeText(
 //            applicationContext,
 //            "$welcome $displayName",
@@ -130,8 +125,6 @@ class LoginActivity : AppCompatActivity() {
             putExtra(EXTRA_MESSAGE, displayName)
         }
         startActivity(intent)
-
-
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

@@ -36,87 +36,40 @@ class LoginDataSource @Inject constructor(private val context: Context) {
 
     suspend fun login(loginData: LoginData) : Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
+            var result: Result<LoggedInUser>
+            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
+            result = Result.Success(fakeUser)
 
-        var result : Result<LoggedInUser>
-        val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
-        result = Result.Success(fakeUser)
-
-//        try {
-            val data = JSONObject(Gson().toJson(loginData))
-//            val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
-            val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Login"
-            val requstQueue = Volley.newRequestQueue(context)
-            var future : RequestFuture<JSONObject> = RequestFuture.newFuture()
-            val jsonobj: JsonObjectRequest = object : JsonObjectRequest(
-                Method.POST, url, data, future, future){}
-
-            requstQueue.add(jsonobj)
             try {
-                val response : JSONObject = future.get()
-                val fUser = LoggedInUser(response.getString("sessionID"), response.getInt("uid"), response.getString("username"))
-                result = Result.Success(fUser)
+                val data = JSONObject(Gson().toJson(loginData))
+    //            val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
+                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Login"
+
+                val requstQueue = Volley.newRequestQueue(context)
+                var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
+                val jsonObjRequest: JsonObjectRequest = object : JsonObjectRequest(
+                    Method.POST, url, data, future, future){}
+
+                requstQueue.add(jsonObjRequest)
+
+                try {
+                    val response : JSONObject = future.get()
+                    val existingUser = LoggedInUser(
+                        response.getString("sessionID"),
+                        response.getInt("uid"),
+                        response.getString("username"))
+                    result = Result.Success(existingUser)
+                } catch (e: Throwable) {
+                    // TODO: handle exception
+                }
+
             } catch (e: Throwable) {
-//                val displayName = (result as Result.Success<LoggedInUser>).data.displayName
-//                println(displayName)
+                result = Result.Error(IOException("Error logging in", e))
             }
 
-
-
-//        } catch (e: Throwable) {
-//            result = Result.Error(IOException("Error logging in", e))
-//        }
-
-        result
+            result
         }
-
-
     }
-
-
-//    try {
-//        // TODO: handle loggedInUser authentication
-//        val data = JSONObject(Gson().toJson(loginData))
-//        var result : Result<LoggedInUser>
-//        val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
-//        result = Result.Success(fakeUser)
-//
-////            val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
-//        val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Login"
-//        val requstQueue = Volley.newRequestQueue(context)
-//        val jsonobj: JsonObjectRequest = object : JsonObjectRequest(
-//            Method.POST, url, data,
-//            Response.Listener { response ->
-////                    val status = response.getInt("Status")
-//                val status = response.getString("sessionID")
-//                println(status)
-//                if(status=="123456"){
-//                    println("==========1")
-//
-//                    //return true
-//                    val fUser = LoggedInUser(response.getString("sessionID"), response.getInt("uid"), response.getString("username"))
-//                    println("==========2")
-//
-//                    result = Result.Success(fUser)
-//                }
-//                else{
-//                    result = Result.Error(IOException("Error logging in"))
-//                }
-//            }, Response.ErrorListener {
-//
-//                // return false
-//                result = Result.Error(IOException("Error logging in"))
-//            }
-//        ) { //here I want to post data to sever
-//        }
-//
-//        requstQueue.add(jsonobj)
-//        val displayName = (result as Result.Success<LoggedInUser>).data.displayName
-//        println(displayName)
-//        return result
-//
-//    } catch (e: Throwable) {
-//        return Result.Error(IOException("Error logging in", e))
-//    }
 
     fun logout() {
         // TODO: revoke authentication

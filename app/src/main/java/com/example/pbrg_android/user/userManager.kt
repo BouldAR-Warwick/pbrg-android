@@ -39,11 +39,15 @@ class UserManager @Inject constructor(
 
     fun isUserLoggedIn() = userComponent != null
 
-    fun registerUser(username: String, password: String, email: String) {
-        val result = registerDataSource.register(RegisterData(username, password, email))
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
-            userJustLoggedIn()
+    suspend fun registerUser(username: String, password: String, email: String): Result<LoggedInUser> {
+        return withContext(Dispatchers.IO) {
+
+            val result = registerDataSource.register(RegisterData(username, password, email))
+            if (result is Result.Success) {
+                setLoggedInUser(result.data)
+                userJustLoggedIn()
+            }
+            result
         }
     }
 

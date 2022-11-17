@@ -1,17 +1,15 @@
 package com.example.pbrg_android.login
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pbrg_android.utility.Result
-
-import javax.inject.Inject
-
 import com.example.pbrg_android.R
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.user.UserManager
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,25 +21,23 @@ class LoginViewModel @Inject constructor(private val userManager: UserManager) :
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun checkLoginStatus() {
-
-    }
-
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            // can be launched in a separate asynchronous job
-            val result = userManager.login(username, password)
-
-            when(result) {
+            when(val result = userManager.login(username, password)) {
                 is Result.Success ->
-                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = result.data.displayName)))
+                    _loginResult.postValue(LoginResult(success = LoggedInUser(
+                        sessionId = result.data.sessionId,
+                        uid = result.data.uid,
+                        displayName = result.data.displayName)))
                 else ->
                     _loginResult.postValue(LoginResult(error = R.string.login_failed))
             }
         }
 
     }
+    fun checkLoginStatus() {
 
+    }
     fun checkWholeForm(username: String, password: String) {
         // check username, password
         val usernameValid = isUserNameValid(username)
@@ -71,7 +67,7 @@ class LoginViewModel @Inject constructor(private val userManager: UserManager) :
         }
     }
 
-    // A placeholder username validation check
+    // TODO: change email to username A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
         return if (username.contains('@')) {
             Patterns.EMAIL_ADDRESS.matcher(username).matches()
