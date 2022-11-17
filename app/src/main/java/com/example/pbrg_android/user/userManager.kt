@@ -6,6 +6,8 @@ import com.example.pbrg_android.utility.Result
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.data.model.LoginData
 import com.example.pbrg_android.data.model.RegisterData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,16 +47,19 @@ class UserManager @Inject constructor(
         }
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
-        // call dataSource login method
-        val result = loginDataSource.login(LoginData(username, password))
-        // return true if result contains LoggedInUser data
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
-            userJustLoggedIn()
-        }
+    suspend fun login(username: String, password: String): Result<LoggedInUser> {
+        return withContext(Dispatchers.IO) {
 
-        return result
+            // call dataSource login method
+            val result = loginDataSource.login(LoginData(username, password))
+            // return true if result contains LoggedInUser data
+            if (result is Result.Success) {
+                setLoggedInUser(result.data)
+                userJustLoggedIn()
+            }
+
+            result
+        }
     }
 
     fun logout() {

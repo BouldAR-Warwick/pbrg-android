@@ -4,12 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pbrg_android.utility.Result
 
 import javax.inject.Inject
 
 import com.example.pbrg_android.R
+import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.user.UserManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginViewModel @Inject constructor(private val userManager: UserManager) : ViewModel() {
 
@@ -24,15 +28,18 @@ class LoginViewModel @Inject constructor(private val userManager: UserManager) :
     }
 
     fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
-        val result = userManager.login(username, password)
+        viewModelScope.launch(Dispatchers.IO) {
+            // can be launched in a separate asynchronous job
+            val result = userManager.login(username, password)
 
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+            when(result) {
+                is Result.Success ->
+                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = result.data.displayName)))
+                else ->
+                    _loginResult.postValue(LoginResult(error = R.string.login_failed))
+            }
         }
+
     }
 
     fun checkWholeForm(username: String, password: String) {
