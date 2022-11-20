@@ -1,6 +1,8 @@
 package com.example.pbrg_android.main
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -9,10 +11,11 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
 import com.example.pbrg_android.login.EXTRA_MESSAGE
-import com.example.pbrg_android.Application
 import org.json.JSONObject
+
 
 class MainActivity : AppCompatActivity(){
     val myCallback = this
@@ -26,15 +29,21 @@ class MainActivity : AppCompatActivity(){
         if (!userManager.isUserLoggedIn()) {
             // return to login page if user is not logged in
         } else {
+            // Load main page
             setContentView(R.layout.activity_main_page)
             var toolbar: Toolbar = findViewById(R.id.my_toolbar)
             toolbar.setTitle("")
             setSupportActionBar(findViewById(R.id.my_toolbar))
-//          supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
             displayUsername()
-//           httpGet()
-            postJSON()
+
+            // Search button
+            val btn: Button = findViewById<View>(R.id.show_search_dialog) as Button
+            btn.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View?) {
+                    onSearchRequested()
+                }
+            })
+
             // If the MainActivity needs to be displayed, we get the UserComponent
             // from the application graph and gets this Activity injected
             userManager.userComponent!!.inject(this)
@@ -44,7 +53,12 @@ class MainActivity : AppCompatActivity(){
     }
 
 
-
+    override fun onSearchRequested(): Boolean {
+        val appSearchData = Bundle()
+        appSearchData.putString("KEY", "text")
+        startSearch(null, false, appSearchData, false)
+        return true
+    }
 
     private fun displayUsername() {
         // Extract the string from the Intent that started this activity

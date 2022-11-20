@@ -18,9 +18,7 @@ interface AppComponent {
         fun create(@BindsInstance context: Context): AppComponent
     }
 
-
     // Types that can be retrieved from the graph
     fun loginComponent(): LoginComponent.Factory
     fun userManager(): UserManager
-
 }

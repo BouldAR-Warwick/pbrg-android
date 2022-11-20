@@ -2,11 +2,9 @@ package com.example.pbrg_android.data
 
 import android.content.Context
 import com.android.volley.NetworkResponse
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.data.model.LoginData
@@ -14,7 +12,6 @@ import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
 import com.google.gson.Gson
 import com.google.gson.internal.`$Gson$Types`
-import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.IOException
@@ -58,6 +55,7 @@ class LoginDataSource @Inject constructor(private val context: Context) {
 //                        if(sessionId != "") {
 //                            var headers: MutableMap<String, String> = mutableMapOf<String, String>()
 //                            headers["cookie"] = sessionId
+//                            headers["Set-Cookies"] = sessionId
 //                            return headers
 //                        } else {
 //                            return super.getHeaders()
