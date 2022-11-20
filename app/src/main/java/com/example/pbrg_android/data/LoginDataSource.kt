@@ -1,17 +1,21 @@
 package com.example.pbrg_android.data
 
 import android.content.Context
+import com.android.volley.NetworkResponse
+import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.data.model.LoginData
+import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
 import com.google.gson.Gson
 import com.google.gson.internal.`$Gson$Types`
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.*
-import kotlinx.coroutines.NonCancellable.join
 import org.json.JSONObject
 import java.io.IOException
 import java.lang.reflect.Type
@@ -37,25 +41,44 @@ class LoginDataSource @Inject constructor(private val context: Context) {
     suspend fun login(loginData: LoginData) : Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
             var result: Result<LoggedInUser>
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
+            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane")
             result = Result.Success(fakeUser)
-
             try {
                 val data = JSONObject(Gson().toJson(loginData))
-    //            val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
+//                val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
                 val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Login"
 
                 val requstQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
+//                val stringRequest: StringRequest = object: StringRequest(Request.Method.POST, url,)
                 val jsonObjRequest: JsonObjectRequest = object : JsonObjectRequest(
-                    Method.POST, url, data, future, future){}
+                    Method.POST, url, data, future, future){
+//                    override fun getHeaders(): MutableMap<String, String> {
+//                        val sessionId: String = ConnectViaSession(context).getSession()!!
+//                        if(sessionId != "") {
+//                            var headers: MutableMap<String, String> = mutableMapOf<String, String>()
+//                            headers["cookie"] = sessionId
+//                            return headers
+//                        } else {
+//                            return super.getHeaders()
+//                        }
+//                    }
+
+                    override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject>
+                    {
+                        ConnectViaSession(context).getSession(response!!)
+                        return super.parseNetworkResponse(response)
+                    }
+                }
 
                 requstQueue.add(jsonObjRequest)
 
                 try {
                     val response : JSONObject = future.get()
+                    val sessionId = ConnectViaSession(context).getSession()
+                    println("==================$sessionId")
                     val existingUser = LoggedInUser(
-                        response.getString("sessionID"),
+                        sessionId!!,
                         response.getInt("uid"),
                         response.getString("username"))
                     result = Result.Success(existingUser)

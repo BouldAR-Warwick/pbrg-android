@@ -51,11 +51,10 @@ class UserManager @Inject constructor(
         }
     }
 
-    suspend fun login(username: String, password: String): Result<LoggedInUser> {
+    suspend fun login(username: String, password: String, stayLoggedIn: Boolean): Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
-
             // call dataSource login method
-            val result = loginDataSource.login(LoginData(username, password))
+            val result = loginDataSource.login(LoginData(username, password, stayLoggedIn))
             // return true if result contains LoggedInUser data
             if (result is Result.Success) {
                 setLoggedInUser(result.data)

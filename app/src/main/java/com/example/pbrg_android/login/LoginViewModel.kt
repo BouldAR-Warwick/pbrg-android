@@ -21,9 +21,9 @@ class LoginViewModel @Inject constructor(private val userManager: UserManager) :
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
+    fun login(username: String, password: String, stayLoggedIn: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            when(val result = userManager.login(username, password)) {
+            when(val result = userManager.login(username, password, stayLoggedIn)) {
                 is Result.Success ->
                     _loginResult.postValue(LoginResult(success = LoggedInUser(
                         sessionId = result.data.sessionId,
