@@ -1,13 +1,10 @@
 package com.example.pbrg_android.search
 
-import android.app.Activity
-import android.app.SearchManager
-import android.content.Intent
+import androidx.appcompat.widget.Toolbar
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.Volley
@@ -15,78 +12,85 @@ import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
 import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import javax.inject.Inject
 
 
-class SearchActivity: Activity() {
+class SearchActivity: AppCompatActivity() {
 
     @Inject
     lateinit var searchViewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Ask Dagger to inject our dependencies
-        (application as Application).appComponent.inject(this)
+        (application as Application).appComponent.injectSearch(this)
 
         super.onCreate(savedInstanceState)
+        // Load search page
         setContentView(R.layout.activity_search)
+        var toolbar: Toolbar = findViewById(R.id.search_toolbar)
+        toolbar.title = ""
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        val listView = findViewById<View>(R.id.search_result_listview) as ListView
-        val emptyGymList: Array<String> = arrayOf()
+        // Load SearchView
+        val mSearchView: SearchView = findViewById<SearchView>(R.id.searchView)
+        mSearchView.isIconified = false
+        mSearchView.isSubmitButtonEnabled = true
+
         var searchResult: Result<Array<String>>
-//        searchResult = Result.Success(emptyGymList)
-        // Get the intent, verify the action and get the query
-        val intent = intent
-        if (Intent.ACTION_SEARCH == intent.action) {
-            val query = intent.getStringExtra(SearchManager.QUERY)
-            GlobalScope.launch {
 
-                searchResult =  searchViewModel.gymSearch(query)
-
-                if (searchResult is Result.Success) {
-                    runOnUiThread(Runnable {
-
-                        // Update list view
-                        val gymList: Array<String> = (searchResult as Result.Success<Array<String>>).data
-                        for (s in gymList) {
-                            println("gym is : $s")
-                        }
-                        val arrayAdapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, gymList)
-                        listView.adapter = arrayAdapter
-                        // Deal with gym selection
-                        listView.setOnItemClickListener{ _, _, position, _ ->
-                            val selectedGym = gymList[position]
-                            Toast.makeText(applicationContext, "Selected $selectedGym", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                } else {
-                    println("error >?>>>>>>>>>>>>")
+        mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                GlobalScope.launch {
+                    searchResult = searchViewModel.gymSearch(query)
+                    if (searchResult is Result.Success) {
+                        updateSearchResult((searchResult as Result.Success<Array<String>>).data)
+                    } else {
+                        println("error >?>>>>>>>>>>>>")
+                    }
                 }
+                return false
             }
 
-        }
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return false
+            }
+
+        })
 
 
-
-
-        // Get value
-        val appData = intent.getBundleExtra(SearchManager.APP_DATA)
-        if (appData != null) {
-            val testValue = appData.getString("KEY")
-            println("extra data = $testValue")
-        }
     }
 
-    private fun updateSearchResult(gymList: Array<String>) : Boolean {
+    // Update search result, populate list view
+    private fun updateSearchResult(gymList: Array<String>) {
+        runOnUiThread(Runnable {
+            val listView = findViewById<View>(R.id.search_result_listview) as ListView
 
-        return true
+            for (s in gymList) {
+                println("gym is : $s")
+            }
+            val arrayAdapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, gymList)
+            listView.adapter = arrayAdapter
+            // Deal with gym selection
+            listView.setOnItemClickListener{ _, _, position, _ ->
+                val selectedGym = gymList[position]
+
+                Toast.makeText(applicationContext, "Selected $selectedGym", Toast.LENGTH_SHORT).show()
+                returnWithSelectedGym(selectedGym)
+            }
+        })
+    }
+
+    // return to main activity with the selected gym
+    private fun returnWithSelectedGym(selectedGym: String) {
+        intent.putExtra("selectedGym", selectedGym)
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     private suspend fun doMySearch(query: String?): Result<MutableList<String>> {
