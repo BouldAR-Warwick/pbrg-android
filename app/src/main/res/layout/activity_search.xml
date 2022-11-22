@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchableActivity">
+    tools:context=".search.SearchActivity">
 
 
     <SearchView
@@ -12,30 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:layout_marginTop="164dp"
         android:iconifiedByDefault="false"
         android:orientation="vertical"
         android:queryHint="@string/search_hint"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.551"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="0dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/search_result_textview"
-        android:layout_width="384dp"
-        android:layout_height="340dp"
+    <ListView
+        android:id="@+id/search_result_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="276dp"
-        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_result_recyclerview"
-        android:layout_width="43dp"
-        android:layout_height="195dp"
-        android:layout_marginStart="12dp"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="430dp" />
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/search_result_recyclerview"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="15dp"-->
+<!--        android:layout_marginStart="12dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/search_result_textview" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

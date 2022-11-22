@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
-        <activity android:name=".activities.SearchableActivity"
+
+        <activity android:name=".search.SearchActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
@@ -29,13 +30,9 @@
             android:name=".main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <action android:name="android.intent.action.SEARCH" />-->
-<!--            </intent-filter>-->
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value="com.example.pbrg_android.activities.SearchableActivity" />
+                android:value="com.example.pbrg_android.search.SearchActivity" />
         </activity>
 
         <activity

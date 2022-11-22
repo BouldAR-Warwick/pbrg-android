@@ -1,5 +1,7 @@
 package com.example.pbrg_android.main
 
+import android.app.SearchManager
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -23,7 +25,6 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         val userManager = (application as Application).appComponent.userManager()
 
         if (!userManager.isUserLoggedIn()) {
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity(){
             // Load main page
             setContentView(R.layout.activity_main_page)
             var toolbar: Toolbar = findViewById(R.id.my_toolbar)
-            toolbar.setTitle("")
+            toolbar.title = ""
             setSupportActionBar(findViewById(R.id.my_toolbar))
             displayUsername()
 
@@ -44,10 +45,10 @@ class MainActivity : AppCompatActivity(){
                 }
             })
 
+
             // If the MainActivity needs to be displayed, we get the UserComponent
             // from the application graph and gets this Activity injected
             userManager.userComponent!!.inject(this)
-
         }
 
     }
@@ -118,8 +119,6 @@ class MainActivity : AppCompatActivity(){
         }.start()
 
     }
-
-
 
     // Select wall
     private fun selectWall() {

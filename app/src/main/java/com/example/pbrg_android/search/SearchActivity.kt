@@ -1,4 +1,4 @@
-package com.example.pbrg_android.activities
+package com.example.pbrg_android.search
 
 import android.app.Activity
 import android.app.SearchManager
@@ -7,39 +7,74 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.Toast
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.Volley
+import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
 import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import javax.inject.Inject
 
 
-class SearchableActivity: Activity() {
+class SearchActivity: Activity() {
 
+    @Inject
+    lateinit var searchViewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Ask Dagger to inject our dependencies
+        (application as Application).appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_searchable)
+        setContentView(R.layout.activity_search)
 
+        val listView = findViewById<View>(R.id.search_result_listview) as ListView
+        val emptyGymList: Array<String> = arrayOf()
+        var searchResult: Result<Array<String>>
+//        searchResult = Result.Success(emptyGymList)
         // Get the intent, verify the action and get the query
         val intent = intent
         if (Intent.ACTION_SEARCH == intent.action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
             GlobalScope.launch {
-                doMySearch(query)
+
+                searchResult =  searchViewModel.gymSearch(query)
+
+                if (searchResult is Result.Success) {
+                    runOnUiThread(Runnable {
+
+                        // Update list view
+                        val gymList: Array<String> = (searchResult as Result.Success<Array<String>>).data
+                        for (s in gymList) {
+                            println("gym is : $s")
+                        }
+                        val arrayAdapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, gymList)
+                        listView.adapter = arrayAdapter
+                        // Deal with gym selection
+                        listView.setOnItemClickListener{ _, _, position, _ ->
+                            val selectedGym = gymList[position]
+                            Toast.makeText(applicationContext, "Selected $selectedGym", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                } else {
+                    println("error >?>>>>>>>>>>>>")
+                }
             }
+
         }
+
+
+
 
         // Get value
         val appData = intent.getBundleExtra(SearchManager.APP_DATA)
@@ -49,9 +84,15 @@ class SearchableActivity: Activity() {
         }
     }
 
+    private fun updateSearchResult(gymList: Array<String>) : Boolean {
+
+        return true
+    }
+
     private suspend fun doMySearch(query: String?): Result<MutableList<String>> {
         return withContext(Dispatchers.IO) {
-            val recyclerView = findViewById<View>(R.id.search_result_recyclerview) as RecyclerView
+            val listView = findViewById<View>(R.id.search_result_listview) as ListView
+//            val recyclerView = findViewById<View>(R.id.search_result_recyclerview) as RecyclerView
             var result: Result<MutableList<String>>
             var fakeGymList: MutableList<String> = mutableListOf<String>()
             result = Result.Success(fakeGymList)
@@ -76,34 +117,36 @@ class SearchableActivity: Activity() {
                             return super.getHeaders()
                         }
                     }
-
 //                    override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject>
 //                    {
 //                        ConnectViaSession(applicationContext).getSession(response!!)
 //                        return super.parseNetworkResponse(response)
 //                    }
                 }
-
                 requestQueue.add(jsonObjRequest)
 
                 try {
                     val response: JSONObject = future.get()
                     println(response.toString())
                     val jsonArray: JSONArray = response.getJSONArray("gyms")
-                    val gymList: MutableList<String> = mutableListOf<String>()
-                    for (i in 0 until jsonArray.length()) {
-                        gymList.add(jsonArray.getString(i))
+                    val gList = mutableListOf<String>()
+                    val gymList = Array(jsonArray.length()) {
+                        jsonArray.getString(it)
                     }
-                    gymList.forEach{
-                        println("gymname: $it")
+                    runOnUiThread(Runnable {
+                        // Populate list view
+                        val arrayAdapter = ArrayAdapter(applicationContext, android.R.layout.simple_list_item_1, gymList)
+                        listView.adapter = arrayAdapter
+                    })
+                    // Deal with gym selection
+                    listView.setOnItemClickListener{ _, _, position, _ ->
+                        val selectedGym = gymList[position]
+                        Toast.makeText(applicationContext, "Selected $selectedGym", Toast.LENGTH_SHORT).show()
                     }
-                    // Display search result as text
-                    val textView: TextView = findViewById(R.id.search_result_textview) as TextView
-                    textView.text = jsonArray.toString()
                     //TODO: Display search result in a recycler view
-                    result = Result.Success(gymList)
+                    result = Result.Success(gList)
                 } catch (e: Throwable) {
-                    println("werror")
+                    println("error $e")
                     result = Result.Error(IOException("Error searching gym", e))
                 }
 
@@ -113,7 +156,6 @@ class SearchableActivity: Activity() {
 
             result
         }
-//        Toast.makeText(this, "do search", Toast.LENGTH_SHORT).show()
     }
 
 }

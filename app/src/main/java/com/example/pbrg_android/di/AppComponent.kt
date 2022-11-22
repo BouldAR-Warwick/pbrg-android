@@ -2,6 +2,8 @@ package com.example.pbrg_android.di
 
 import android.content.Context
 import com.example.pbrg_android.login.LoginComponent
+import com.example.pbrg_android.search.SearchActivity
+import com.example.pbrg_android.search.SearchViewModel
 import com.example.pbrg_android.user.UserManager
 import dagger.BindsInstance
 import dagger.Component
@@ -18,6 +20,8 @@ interface AppComponent {
         fun create(@BindsInstance context: Context): AppComponent
     }
 
+    fun inject(activity: SearchActivity)
+    fun searchViewModel(): SearchViewModel
     // Types that can be retrieved from the graph
     fun loginComponent(): LoginComponent.Factory
     fun userManager(): UserManager
