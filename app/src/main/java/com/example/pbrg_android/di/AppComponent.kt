@@ -5,6 +5,7 @@ import com.example.pbrg_android.login.LoginComponent
 import com.example.pbrg_android.search.SearchActivity
 import com.example.pbrg_android.search.SearchViewModel
 import com.example.pbrg_android.user.UserManager
+import com.example.pbrg_android.wall.WallComponent
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -24,5 +25,6 @@ interface AppComponent {
     fun searchViewModel(): SearchViewModel
     // Types that can be retrieved from the graph
     fun loginComponent(): LoginComponent.Factory
+    fun wallComponent(): WallComponent.Factory
     fun userManager(): UserManager
 }
