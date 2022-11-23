@@ -8,6 +8,8 @@
     <string name="duplicated_username">Duplicated username</string>
     <string name="duplicated_email">Duplicated email address</string>
     <string name="register_failed">"Register failed"</string>
+    <string name="invalid_email">Invalid email address</string>
+    <string name="password_mismatch">Password entered is not same</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
