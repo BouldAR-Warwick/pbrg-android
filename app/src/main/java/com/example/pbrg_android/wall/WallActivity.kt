@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.login.LoginViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class WallActivity : AppCompatActivity() {
@@ -30,8 +34,22 @@ class WallActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_wall_routes)
-        data = mutableListOf<String>()
+        // Set toolbar with back button
+        var toolbar: Toolbar = findViewById(R.id.wall_toolbar)
+        toolbar.title = ""
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        findViewById<TextView>(R.id.selectedGymName).apply {
+            text = intent.getStringExtra("selectedGym")
+        }
         mList = findViewById<View>(R.id.routeList) as ListView
+
+        // Get data through data source
+        GlobalScope.launch {
+            wallViewModel.getWall()
+        }
+        data = mutableListOf<String>()
         for (i in 0..19) {
             data!!.add("#$i")
         }

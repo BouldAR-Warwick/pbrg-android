@@ -28,8 +28,8 @@ class WallAdapter(private val data: List<String>?) : BaseAdapter(),
         return i.toLong()
     }
 
-    override fun getView(i: Int, view: View, viewGroup: ViewGroup): View {
-        var view: View = view
+    override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View? {
+        var view: View? = view
         var viewHolder: ViewHolder? = null
         if (context == null) context = viewGroup.context
         if (view == null) {
@@ -40,7 +40,7 @@ class WallAdapter(private val data: List<String>?) : BaseAdapter(),
             view.tag = viewHolder
         }
         // get viewHolder instance
-        viewHolder = view.tag as ViewHolder
+        viewHolder = view!!.tag as ViewHolder
         // set data
         viewHolder!!.mTv!!.text = data!![i]
         // set tag

@@ -21,16 +21,17 @@ import com.example.pbrg_android.R
 import com.example.pbrg_android.databinding.ActivityMainPageBinding
 import com.example.pbrg_android.login.EXTRA_MESSAGE
 import com.example.pbrg_android.search.SearchActivity
+import com.example.pbrg_android.wall.WallActivity
 import com.tencent.mmkv.MMKV
 import org.json.JSONObject
 import javax.inject.Inject
-
 
 class MainActivity : AppCompatActivity(){
     private lateinit var binding: ActivityMainPageBinding
 
     @Inject
     lateinit var mainViewModel: MainViewModel
+
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -72,6 +73,15 @@ class MainActivity : AppCompatActivity(){
                     onSearchRequested()
                 }
             })
+
+            // Wall button
+            wall.setOnClickListener(object: View.OnClickListener {
+                override fun onClick(v: View?) {
+                    loadWall()
+                }
+
+            })
+
             // If the MainActivity needs to be displayed, we get the UserComponent
             // from the application graph and gets this Activity injected
             userManager.userComponent!!.inject(this)
@@ -108,57 +118,12 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    private fun httpGet() {
-        Thread {
-            val textView = findViewById<TextView>(R.id.textView)
-            // Instantiate the RequestQueue.
-            val queue = Volley.newRequestQueue(this)
-            val url = "https://www.google.com"
-
-            // Request a string response from the provided URL.
-            val stringRequest = StringRequest(
-                Request.Method.GET, url,
-                Response.Listener<String> { response ->
-                    // Display the first 500 characters of the response string.
-                    textView.text = "Response is: ${response.substring(0, 50)}"
-                },
-                Response.ErrorListener { textView.text = "That didn't work!" })
-
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest)
-
-        }.start()
-    }
-
-    private fun postJSON() {
-        Thread {
-            val textView = findViewById<TextView>(R.id.textView)
-            val data = JSONObject("""{"name":"test name", "age":25}""")
-            val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
-            val requstQueue = Volley.newRequestQueue(this)
-            val jsonobj: JsonObjectRequest = object : JsonObjectRequest(
-                Method.POST, url, data,
-                Response.Listener { response ->
-                    val JSONObj = response.getString("Status")
-                    if(JSONObj=="200"){
-                        //return true
-                        textView.text = "Response is OK"
-                    }
-                    else{
-                    }
-                }, Response.ErrorListener {
-                    // return  false
-                    textView.text = "That didn't work!"
-                }
-            ) { //here I want to post data to sever
-            }
-            requstQueue.add(jsonobj)
-        }.start()
-
-    }
-
     // Select wall
-    private fun selectWall() {
-
+    private fun loadWall() {
+        val intent: Intent = Intent(this, WallActivity::class.java).apply {
+            val selectedGym: String? = intent.getStringExtra("selectedGym")
+            putExtra("selectedGym", selectedGym)
+        }
+        startActivity(intent)
     }
 }

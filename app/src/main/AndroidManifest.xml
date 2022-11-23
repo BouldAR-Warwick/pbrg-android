@@ -69,6 +69,9 @@
                 <category android:name="wall" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" />
         </activity>
 
     </application>
