@@ -92,7 +92,7 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
     }
 
     private fun isUserNameValid(username: String): Boolean {
-        return username.length > 6
+        return username.length >= 6
     }
 
     private fun isPasswordValid(password: String): Boolean {

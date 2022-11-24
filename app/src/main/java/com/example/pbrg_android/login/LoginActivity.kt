@@ -16,6 +16,7 @@ import com.example.pbrg_android.main.MainActivity
 import com.example.pbrg_android.databinding.ActivityLoginBinding
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.data.model.LoggedInUser
+import com.example.pbrg_android.register.RegisterActivity
 import javax.inject.Inject
 
 const val EXTRA_MESSAGE = "com.example.pbrg_android.MESSAGE"
@@ -41,6 +42,7 @@ class LoginActivity : AppCompatActivity() {
         val username = binding.username
         val password = binding.password
         val login = binding.login
+        val signup = binding.singup
         val loading = binding.loading
         val stayLoggedIn = binding.stayLoggedIn
 
@@ -73,6 +75,11 @@ class LoginActivity : AppCompatActivity() {
             //Complete and destroy login activity once successful
             finish()
         })
+
+        signup!!.setOnClickListener{
+            val intent: Intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
 
         username.afterTextChanged { it ->
             loginViewModel.usernameChanged(it)

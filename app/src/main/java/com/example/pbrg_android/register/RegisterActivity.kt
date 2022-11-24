@@ -27,7 +27,7 @@ class RegisterActivity  : AppCompatActivity() {
     @Inject
     lateinit var registerViewModel: RegisterViewModel
 
-    private val delay: Long = 1000 // 1 seconds after user stops typing
+    private val delay: Long = 600 // 1 seconds after user stops typing
     private var lastTextEdit: Long = 0
     private val handler = Handler(Looper.getMainLooper())
 
@@ -56,14 +56,14 @@ class RegisterActivity  : AppCompatActivity() {
             if (registerState.usernameError != null) {
                 username.error = getString(registerState.usernameError)
             }
+            if (registerState.emailError != null) {
+                email.error = getString(registerState.emailError)
+            }
             if (registerState.passwordError != null) {
                 password.error = getString(registerState.passwordError)
             }
-            if (registerState.emailError != null) {
-                password.error = getString(registerState.emailError)
-            }
             if (registerState.passwordMisMatch != null) {
-                password.error = getString(registerState.passwordMisMatch)
+                confirmPassword.error = getString(registerState.passwordMisMatch)
             }
         })
 

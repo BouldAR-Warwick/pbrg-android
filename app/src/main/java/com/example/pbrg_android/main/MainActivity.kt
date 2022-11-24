@@ -2,28 +2,26 @@ package com.example.pbrg_android.main
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
 import com.example.pbrg_android.databinding.ActivityMainPageBinding
 import com.example.pbrg_android.login.EXTRA_MESSAGE
 import com.example.pbrg_android.search.SearchActivity
+import com.example.pbrg_android.utility.Result
 import com.example.pbrg_android.wall.WallActivity
-import com.tencent.mmkv.MMKV
-import org.json.JSONObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(){
@@ -77,7 +75,7 @@ class MainActivity : AppCompatActivity(){
             // Wall button
             wall.setOnClickListener(object: View.OnClickListener {
                 override fun onClick(v: View?) {
-                    loadWall()
+                    gotoWall()
                 }
 
             })
@@ -115,15 +113,44 @@ class MainActivity : AppCompatActivity(){
             findViewById<TextView>(R.id.selected_gym).apply {
                 text = selectedGym
             }
+            getGym(selectedGym)
+        }
+    }
+
+
+    private fun getGym(selectedGym: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            // get selected gym
+            var result: Result<Int> = Result.Success(0)
+            result = mainViewModel.getGym(selectedGym)
+            if (result is Result.Success) {
+                println("got selected gym")
+            } else {
+                println("Error getting selected gym")
+            }
+
+            // display wall image of the gym
+            var imageResult: Result<Bitmap> = Result.Error(IOException("Error loading image"))
+            imageResult = mainViewModel.getWallImage()
+            if (imageResult is Result.Success) {
+                println("got image")
+                runOnUiThread {
+                    val imageView = findViewById<ImageView>(R.id.wall) as ImageView
+                    imageView.setImageBitmap(imageResult.data)
+                }
+            } else {
+                println("Error displaying image!")
+            }
         }
     }
 
     // Select wall
-    private fun loadWall() {
+    private fun gotoWall() {
         val intent: Intent = Intent(this, WallActivity::class.java).apply {
             val selectedGym: String? = intent.getStringExtra("selectedGym")
             putExtra("selectedGym", selectedGym)
         }
         startActivity(intent)
     }
+
 }

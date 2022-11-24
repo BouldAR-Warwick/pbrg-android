@@ -22,7 +22,7 @@ class SearchDataSource @Inject constructor(private val context: Context) {
             result = Result.Success(fakeGymList)
             // POST search request
             try {
-                val data = JSONObject("""{"queryword":$query}""")
+                val data = JSONObject("""{"queryword":"$query"}""")
 //                val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
                 val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/SearchGym"
 

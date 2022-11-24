@@ -2,12 +2,14 @@ package com.example.pbrg_android.data
 
 
 import android.content.Context
+import com.android.volley.NetworkResponse
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.Volley
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.data.model.RegisterData
+import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -31,21 +33,30 @@ class RegisterDataSource @Inject constructor(private val context: Context) {
                 val data = JSONObject(Gson().toJson(registerData))
                 val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Register"
 
-                val requstQueue = Volley.newRequestQueue(context)
+                val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
                 val jsonObjRequest: JsonObjectRequest = object : JsonObjectRequest(
-                    Method.POST, url, data, future, future){}
+                    Method.POST, url, data, future, future){
+                    override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject>
+                    {
+                        ConnectViaSession(context).getSession(response!!)
+                        return super.parseNetworkResponse(response)
+                    }
+                }
 
-                requstQueue.add(jsonObjRequest)
+                requestQueue.add(jsonObjRequest)
 
                 try {
+
                     val response: JSONObject = future.get()
+                    val sessionId = ConnectViaSession(context).getSession()
                     val newUser = LoggedInUser(
-                        response.getString("sessionID"),
+                        sessionId!!,
                         response.getInt("uid"),
                         response.getString("username"))
                     result = Result.Success(newUser)
                 } catch (e: Throwable) {
+                    println("error $e")
                     // TODO: handle exception
                 }
 

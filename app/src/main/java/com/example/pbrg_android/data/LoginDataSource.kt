@@ -25,16 +25,6 @@ import javax.inject.Inject
  */
 class LoginDataSource @Inject constructor(private val context: Context) {
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
-        try {
-            // TODO: handle loggedInUser authentication
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
-            return Result.Success(fakeUser)
-        } catch (e: Throwable) {
-            return Result.Error(IOException("Error logging in", e))
-        }
-    }
-
     suspend fun login(loginData: LoginData) : Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
             var result: Result<LoggedInUser>
@@ -45,23 +35,10 @@ class LoginDataSource @Inject constructor(private val context: Context) {
 //                val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
                 val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Login"
 
-                val requstQueue = Volley.newRequestQueue(context)
+                val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
-//                val stringRequest: StringRequest = object: StringRequest(Request.Method.POST, url,)
                 val jsonObjRequest: JsonObjectRequest = object : JsonObjectRequest(
                     Method.POST, url, data, future, future){
-//                    override fun getHeaders(): MutableMap<String, String> {
-//                        val sessionId: String = ConnectViaSession(context).getSession()!!
-//                        if(sessionId != "") {
-//                            var headers: MutableMap<String, String> = mutableMapOf<String, String>()
-//                            headers["cookie"] = sessionId
-//                            headers["Set-Cookies"] = sessionId
-//                            return headers
-//                        } else {
-//                            return super.getHeaders()
-//                        }
-//                    }
-
                     override fun parseNetworkResponse(response: NetworkResponse?): Response<JSONObject>
                     {
                         ConnectViaSession(context).getSession(response!!)
@@ -69,12 +46,11 @@ class LoginDataSource @Inject constructor(private val context: Context) {
                     }
                 }
 
-                requstQueue.add(jsonObjRequest)
+                requestQueue.add(jsonObjRequest)
 
                 try {
                     val response : JSONObject = future.get()
                     val sessionId = ConnectViaSession(context).getSession()
-                    println("==================$sessionId")
                     val existingUser = LoggedInUser(
                         sessionId!!,
                         response.getInt("uid"),
