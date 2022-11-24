@@ -4,17 +4,26 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:id="@+id/mTv"
+        android:id="@+id/routeItemName"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:text="234"
         />
-    <Button
-        android:id="@+id/mBtn"
+    <TextView
+        android:id="@+id/routeItemDifficulty"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:textSize="20sp"
+        android:layout_alignParentEnd="true"
+        />
+    <TextView
+        android:id="@+id/routeID"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="invisible"
         />
 </RelativeLayout>

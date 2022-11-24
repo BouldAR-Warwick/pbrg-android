@@ -4,69 +4,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Route">
+    tools:context=".route.RouteActivity">
 
-    <Button
-        android:id="@+id/button35"
-        android:layout_width="358dp"
-        android:layout_height="91dp"
-        android:layout_marginStart="16dp"
-        android:text="My Attempt/Comment"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="501dp" />
-
-    <Button
-        android:id="@+id/button32"
-        android:layout_width="162dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="16dp"
-        android:text="View Route in AR"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="419dp" />
-
-    <Button
-        android:id="@+id/button33"
-        android:layout_width="162dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="212dp"
-        android:text="Delete Route"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="419dp" />
-
-    <Button
-        android:id="@+id/button34"
-        android:layout_width="162dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="212dp"
-        android:text="Delete Route"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="419dp" />
-
-    <Button
-        android:id="@+id/button31"
-        android:layout_width="359dp"
-        android:layout_height="223dp"
-        android:layout_marginStart="16dp"
-        android:text="Route #1(V7) - Image"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="170dp" />
-
-    <Button
-        android:id="@+id/button30"
-        android:layout_width="363dp"
-        android:layout_height="66dp"
-        android:layout_marginStart="16dp"
-        android:text="Selected Gym - Wall - Route #1(V7)"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="80dp" />
-
-    <Button
-        android:id="@+id/button26"
-        android:layout_width="393dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="16dp"
-        android:text="[My Gym] | Account | Setting"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/route_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:contentInsetStart="0dp"
+        android:contentInsetLeft="0dp"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:id="@+id/selectedGymName"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:padding="8dp"
+            android:text="@string/selected_gym" />
+
+        <TextView
+            android:id="@+id/difficulty"
+            android:layout_width="72dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:padding="8dp"
+            android:text="@string/difficulty" />
+
+        <TextView
+            android:id="@+id/selectedRouteName"
+            android:layout_width="128dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:padding="8dp"
+            android:text="@string/selected_route" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <Button
+        android:id="@+id/viewAR"
+        android:layout_width="180dp"
+        android:layout_height="54dp"
+        android:text="@string/viewRouteInAR"
+        app:layout_constraintBottom_toTopOf="@+id/commentRoute"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/routeImage" />
+
+    <Button
+        android:id="@+id/commentRoute"
+        android:layout_width="180dp"
+        android:layout_height="54dp"
+        android:text="@string/commentRoute"
+        app:layout_constraintBottom_toTopOf="@+id/deleteRoute"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewAR" />
+
+    <Button
+        android:id="@+id/deleteRoute"
+        android:layout_width="180dp"
+        android:layout_height="54dp"
+        android:text="@string/deleteRoute"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/commentRoute" />
+
+    <ImageView
+        android:id="@+id/routeImage"
+        android:layout_width="match_parent"
+        android:layout_height="323dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/uni_board"
+        app:layout_constraintBottom_toTopOf="@+id/viewAR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/route_toolbar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

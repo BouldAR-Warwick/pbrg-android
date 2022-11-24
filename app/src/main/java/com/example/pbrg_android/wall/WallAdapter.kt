@@ -10,8 +10,9 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.example.pbrg_android.R
+import com.example.pbrg_android.data.model.RouteListItem
 
-class WallAdapter(private val data: List<String>?) : BaseAdapter(),
+class WallAdapter(private val data: List<RouteListItem>?) : BaseAdapter(),
     View.OnClickListener {
 
     private var context: Context? = null
@@ -20,7 +21,7 @@ class WallAdapter(private val data: List<String>?) : BaseAdapter(),
         return data?.size ?: 0
     }
 
-    override fun getItem(i: Int): Any {
+    override fun getItem(i: Int): RouteListItem {
         return data!![i]
     }
 
@@ -35,39 +36,28 @@ class WallAdapter(private val data: List<String>?) : BaseAdapter(),
         if (view == null) {
             view = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_item, null)
             viewHolder = ViewHolder()
-            viewHolder.mTv = view.findViewById(R.id.mTv) as TextView
-            viewHolder.mBtn = view.findViewById(R.id.mBtn) as Button
+            viewHolder.routeItemName = view.findViewById(R.id.routeItemName) as TextView
+            viewHolder.routeItemDifficulty = view.findViewById(R.id.routeItemDifficulty) as TextView
+            viewHolder.routeID = view.findViewById(R.id.routeID) as TextView
             view.tag = viewHolder
         }
         // get viewHolder instance
         viewHolder = view!!.tag as ViewHolder
         // set data
-        viewHolder!!.mTv!!.text = data!![i]
-        // set tag
-        viewHolder.mBtn!!.setTag(R.id.btn,i)
-        // set data
-        viewHolder.mBtn!!.text = "route#$i"
-        // set listener
-        viewHolder.mBtn!!.setOnClickListener(this)
+        viewHolder!!.routeItemName!!.text = data!![i].routeName
+        viewHolder!!.routeItemDifficulty!!.text = data!![i].difficulty
+        viewHolder!!.routeID!!.text = data!![i].routeID.toString()
 
         return view
     }
 
     override fun onClick(view: View) {
-        when (view.id) {
-            R.id.mBtn -> {
-                Log.d("tag", "Btn_onClick: view = $view")
-                Toast.makeText(context, "button clicked", Toast.LENGTH_SHORT).show()
-            }
-            R.id.mTv -> {
-                Log.d("tag", "Tv_onClick: view = $view")
-                Toast.makeText(context, "text clicked", Toast.LENGTH_SHORT).show()
-            }
-        }
+
     }
 
     internal class ViewHolder {
-        var mTv: TextView? = null
-        var mBtn: Button? = null
+        var routeItemName: TextView? = null
+        var routeItemDifficulty: TextView? = null
+        var routeID: TextView? = null
     }
 }

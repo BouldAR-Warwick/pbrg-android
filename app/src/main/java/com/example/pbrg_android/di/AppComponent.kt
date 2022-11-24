@@ -5,6 +5,7 @@ import com.example.pbrg_android.login.LoginComponent
 import com.example.pbrg_android.main.MainActivity
 import com.example.pbrg_android.main.MainViewModel
 import com.example.pbrg_android.register.RegisterComponent
+import com.example.pbrg_android.route.RouteComponent
 import com.example.pbrg_android.search.SearchActivity
 import com.example.pbrg_android.search.SearchViewModel
 import com.example.pbrg_android.user.UserManager
@@ -34,5 +35,6 @@ interface AppComponent {
     fun registerComponent(): RegisterComponent.Factory
     fun loginComponent(): LoginComponent.Factory
     fun wallComponent(): WallComponent.Factory
+    fun routeComponent(): RouteComponent.Factory
     fun userManager(): UserManager
 }

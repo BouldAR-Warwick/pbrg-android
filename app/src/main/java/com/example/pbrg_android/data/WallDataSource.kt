@@ -4,7 +4,7 @@ import android.content.Context
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.Volley
-import com.example.pbrg_android.data.model.RouteData
+import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +16,11 @@ import javax.inject.Inject
 
 class WallDataSource @Inject constructor(private val context: Context) {
 
-    suspend fun routeSearch(): Result<Array<RouteData>> {
+    suspend fun routeSearch(): Result<Array<RouteListItem>> {
 
         return withContext(Dispatchers.IO) {
-            var result: Result<Array<RouteData>>
-            var fakeRoutes: Array<RouteData> = arrayOf()
+            var result: Result<Array<RouteListItem>>
+            var fakeRoutes: Array<RouteListItem> = arrayOf()
             result = Result.Success(fakeRoutes)
 
             // POST search request
@@ -49,7 +49,7 @@ class WallDataSource @Inject constructor(private val context: Context) {
                     // Extract search result as a list of gyms
                     val response: JSONObject = future.get()
                     val jsonArray: JSONArray = response.getJSONArray("routes")
-                    var routeList: Array<RouteData> = arrayOf()
+                    var routeList: Array<RouteListItem> = arrayOf()
                     // TODO: obtain routes from json array
 
                     Result.Success(routeList)

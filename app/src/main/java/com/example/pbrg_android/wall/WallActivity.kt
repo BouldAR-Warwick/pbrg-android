@@ -1,18 +1,17 @@
 package com.example.pbrg_android.wall
 
+import android.content.Intent
 import com.example.pbrg_android.R
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.pbrg_android.Application
-import com.example.pbrg_android.login.LoginViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.example.pbrg_android.data.model.RouteListItem
+import com.example.pbrg_android.route.RouteActivity
 import javax.inject.Inject
 
 class WallActivity : AppCompatActivity() {
@@ -21,10 +20,10 @@ class WallActivity : AppCompatActivity() {
     lateinit var wallViewModel: WallViewModel
 
     //ListView component
-    private var mList: ListView? = null
+    private var routeList: ListView? = null
 
     //ListView data source
-    private var data: MutableList<String>? = null
+    private var data: MutableList<RouteListItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Creates an instance of Login component by grabbing the factory from the app graph
@@ -43,25 +42,29 @@ class WallActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.selectedGymName).apply {
             text = intent.getStringExtra("selectedGym")
         }
-        mList = findViewById<View>(R.id.routeList) as ListView
+        routeList = findViewById<View>(R.id.routeList) as ListView
 
-        // Get data through data source
-        GlobalScope.launch {
-            wallViewModel.getWall()
-        }
-        data = mutableListOf<String>()
-        for (i in 0..19) {
-            data!!.add("#$i")
-        }
+
+        // Get route data through data source
+        data = wallViewModel.getWall()
+
         val adapter = WallAdapter(data)
-        mList!!.adapter = adapter
+        routeList!!.adapter = adapter
         //ListView item click event
-        mList!!.setOnItemClickListener { _, _, i, l ->
+        routeList!!.setOnItemClickListener { _, _, i, l ->
             Toast.makeText(
                 this@WallActivity,
                 "item clicked i = " + i + "l = " + l,
                 Toast.LENGTH_SHORT
             ).show()
+
+            val intent = Intent(this, RouteActivity::class.java).apply{
+                val route: RouteListItem = adapter.getItem(i)
+                putExtra("routeID", route.routeID)
+                putExtra("routeName", route.routeName)
+                putExtra("difficulty", route.difficulty)
+            }
+            startActivity(intent)
         }
     }
 

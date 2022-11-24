@@ -33,5 +33,11 @@
     <string name="change_gym">Change</string>
     <string name="search_hint">Search gym name</string>
 
+    <!-- Strings related to Route -->
+    <string name="selected_route">Selected Route</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="viewRouteInAR">View route in AR</string>
+    <string name="deleteRoute">Delete route</string>
+    <string name="commentRoute">Comment on route</string>
 
 </resources>
