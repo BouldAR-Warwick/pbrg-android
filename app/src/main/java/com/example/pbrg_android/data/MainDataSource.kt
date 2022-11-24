@@ -67,7 +67,6 @@ class MainDataSource @Inject constructor(private val context: Context) {
             // POST get gym request
             try {
                 val data = JSONObject("""{"gymname":"$selectedGym"}""")
-                println(data.toString())
                 val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetGym"
 
                 val requestQueue = Volley.newRequestQueue(context)

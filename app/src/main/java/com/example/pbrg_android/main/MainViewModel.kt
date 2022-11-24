@@ -18,16 +18,14 @@ class MainViewModel @Inject constructor(private val mainDataSource: MainDataSour
 
     suspend fun getGym(selectedGym: String): Result<Int> {
         return withContext(Dispatchers.IO) {
-            var result: Result<Int> = Result.Success(0)
-            result = mainDataSource.getGym(selectedGym)
+            var result: Result<Int> = mainDataSource.getGym(selectedGym)
             result
         }
     }
 
     suspend fun getWallImage(): Result<Bitmap> {
         return withContext(Dispatchers.IO) {
-            var result: Result<Bitmap> = Result.Error(IOException("Error loading image"))
-            result = mainDataSource.getImage()
+            var result: Result<Bitmap> = mainDataSource.getImage()
             result
         }
     }

@@ -42,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
         val username = binding.username
         val password = binding.password
         val login = binding.login
-        val signup = binding.singup
+        val signup = binding.signup
         val loading = binding.loading
         val stayLoggedIn = binding.stayLoggedIn
 

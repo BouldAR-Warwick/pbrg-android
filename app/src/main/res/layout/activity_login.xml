@@ -55,12 +55,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/singup"
+        app:layout_constraintStart_toEndOf="@+id/signup"
         app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintVertical_bias="0.772" />
 
     <Button
-        android:id="@+id/singup"
+        android:id="@+id/signup"
         android:layout_width="160dp"
         android:layout_height="50dp"
         android:layout_gravity="start"
@@ -107,7 +107,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
         android:text="@string/stay_logged_in"
-        app:layout_constraintBottom_toTopOf="@+id/singup"
+        app:layout_constraintBottom_toTopOf="@+id/signup"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintVertical_bias="0.095" />

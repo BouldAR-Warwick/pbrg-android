@@ -1,14 +1,22 @@
 package com.example.pbrg_android.route
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.viewModelScope
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
 import com.example.pbrg_android.databinding.ActivityLoginBinding
 import com.example.pbrg_android.databinding.ActivityRouteBinding
+import com.example.pbrg_android.utility.Result
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 class RouteActivity : AppCompatActivity(){
@@ -45,20 +53,44 @@ class RouteActivity : AppCompatActivity(){
         val routeImage = binding.routeImage
 
         selectedGymName.text = intent.getStringExtra("selectedGym")
-        selectedRouteName.text = intent.getStringExtra("selectedRoute")
-        difficulty.text = intent.getStringExtra("selectedRoute")
+        val routeID = intent.getIntExtra("routeID", 0)
+        selectedRouteName.text = intent.getStringExtra("routeName")
+        difficulty.text = intent.getStringExtra("difficulty")
+
+        // Get route image
+        getRouteSequence(routeImage, routeID)
 
         viewAR.setOnClickListener {
             //TODO: Add AR functionality
         }
 
         deleteRoute.setOnClickListener {
-//            routeViewModel.deleteRoute(routeID)
+            routeViewModel.deleteRoute()
         }
 
         commentRoute.setOnClickListener {
             //TODO: Add comment functionality
         }
 
+    }
+
+    private fun getRouteSequence(routeImage: ImageView, routeID: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            var result: Result<Int> = routeViewModel.getRoute(routeID)
+            if (result is Result.Success) {
+                println("got selected route")
+                var imageResult: Result<Bitmap> = routeViewModel.getRouteImage(routeID)
+                if (imageResult is Result.Success) {
+                    runOnUiThread {
+                        routeImage.setImageBitmap(imageResult.data)
+                    }
+                } else {
+                    println("Error getting route image")
+                }
+            } else {
+                println("Error getting selected route")
+            }
+
+        }
     }
 }
