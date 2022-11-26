@@ -17,7 +17,6 @@ import javax.inject.Inject
 
 class RouteDataSource @Inject constructor(private val context: Context) {
 
-
     suspend fun getRoute(routeID: Int): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int>

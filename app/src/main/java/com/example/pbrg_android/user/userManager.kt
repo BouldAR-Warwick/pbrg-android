@@ -1,11 +1,13 @@
 package com.example.pbrg_android.user
 
+import android.widget.Toast
 import com.example.pbrg_android.data.LoginDataSource
 import com.example.pbrg_android.data.RegisterDataSource
 import com.example.pbrg_android.utility.Result
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.data.model.LoginData
 import com.example.pbrg_android.data.model.RegisterData
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -69,6 +71,7 @@ class UserManager @Inject constructor(
         // When the user logs out, we remove the instance of UserComponent from memory
         user = null
         userComponent = null
+        MMKV.defaultMMKV().clearAll()
     }
 
     private fun userJustLoggedIn() {

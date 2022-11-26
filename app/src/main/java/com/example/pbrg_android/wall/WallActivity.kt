@@ -4,6 +4,7 @@ import android.content.Intent
 import com.example.pbrg_android.R
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.Toolbar
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.route.RouteActivity
+import com.example.pbrg_android.routeGen.RouteGenActivity
 import javax.inject.Inject
 
 class WallActivity : AppCompatActivity() {
@@ -39,8 +41,10 @@ class WallActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
+
+        val selectedGymName = intent.getStringExtra("selectedGym")
         findViewById<TextView>(R.id.selectedGymName).apply {
-            text = intent.getStringExtra("selectedGym")
+            text = selectedGymName
         }
         routeList = findViewById<View>(R.id.routeList) as ListView
 
@@ -50,7 +54,8 @@ class WallActivity : AppCompatActivity() {
 
         val adapter = WallAdapter(data)
         routeList!!.adapter = adapter
-        //ListView item click event
+
+        // ListView item click event
         routeList!!.setOnItemClickListener { _, _, i, l ->
             Toast.makeText(
                 this@WallActivity,
@@ -64,6 +69,15 @@ class WallActivity : AppCompatActivity() {
                 putExtra("routeName", route.routeName)
                 putExtra("difficulty", route.difficulty)
                 putExtra("selectedGym", intent.getStringExtra("selectedGym"))
+            }
+            startActivity(intent)
+        }
+
+        // Generate new route button listener
+        val generate = findViewById<Button>(R.id.generateNewRoute)
+        generate.setOnClickListener {
+            val intent: Intent = Intent(this, RouteGenActivity::class.java).apply {
+                putExtra("selectedGym", selectedGymName)
             }
             startActivity(intent)
         }

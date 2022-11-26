@@ -2,21 +2,14 @@ package com.example.pbrg_android.route
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.viewModelScope
 import com.example.pbrg_android.Application
-import com.example.pbrg_android.R
-import com.example.pbrg_android.databinding.ActivityLoginBinding
 import com.example.pbrg_android.databinding.ActivityRouteBinding
 import com.example.pbrg_android.utility.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.IOException
 import javax.inject.Inject
 
 class RouteActivity : AppCompatActivity(){

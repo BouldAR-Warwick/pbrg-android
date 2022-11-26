@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Parcel
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,11 +17,14 @@ import com.example.pbrg_android.R
 import com.example.pbrg_android.databinding.ActivityMainPageBinding
 import com.example.pbrg_android.login.EXTRA_MESSAGE
 import com.example.pbrg_android.search.SearchActivity
+import com.example.pbrg_android.setting.SettingActivity
 import com.example.pbrg_android.utility.Result
 import com.example.pbrg_android.wall.WallActivity
+import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import javax.inject.Inject
 
@@ -52,7 +56,8 @@ class MainActivity : AppCompatActivity(){
         binding = ActivityMainPageBinding.inflate(layoutInflater)
         val search = binding.showSearchDialog
         val wall = binding.wall
-
+        val setting = binding.setting
+        val displayName = binding.displayName
         if (!userManager.isUserLoggedIn()) {
             // return to login page if user is not logged in
         } else {
@@ -62,23 +67,18 @@ class MainActivity : AppCompatActivity(){
             toolbar.title = ""
             setSupportActionBar(findViewById(R.id.my_toolbar))
             // Display necessary message
-            displayUsername()
+            displayName.text = intent.getStringExtra(EXTRA_MESSAGE)
             displaySelectedGym()
 
             // Search button
-            search.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(v: View?) {
-                    onSearchRequested()
-                }
-            })
+            search.setOnClickListener { onSearchRequested() }
 
             // Wall button
-            wall.setOnClickListener(object: View.OnClickListener {
-                override fun onClick(v: View?) {
-                    gotoWall()
-                }
+            wall.setOnClickListener { gotoWall() }
 
-            })
+            displayName.setOnClickListener { gotoSetting(displayName.text.toString()) }
+
+            setting.setOnClickListener { gotoSetting(displayName.text.toString()) }
 
             // If the MainActivity needs to be displayed, we get the UserComponent
             // from the application graph and gets this Activity injected
@@ -92,15 +92,11 @@ class MainActivity : AppCompatActivity(){
         return true
     }
 
-    private fun displayUsername() {
-        // Extract the string from the Intent that started this activity
-        val username = intent.getStringExtra(EXTRA_MESSAGE)
-        if (username != null) {
-            // Capture the layout's TextView and set the string as its text
-            findViewById<TextView>(R.id.displayName).apply {
-                text = username
-            }
+    private fun gotoSetting(username: String) {
+        val intent: Intent = Intent(this, SettingActivity::class.java).apply {
+            putExtra("username", username)
         }
+        startActivity(intent)
     }
 
     // Display the primary gym or selected gym from searched result
@@ -117,7 +113,6 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-
     private fun getGym(selectedGym: String) {
         GlobalScope.launch(Dispatchers.IO) {
             // get selected gym
@@ -132,8 +127,9 @@ class MainActivity : AppCompatActivity(){
             // display wall image of the gym
             var imageResult: Result<Bitmap> = Result.Error(IOException("Error loading image"))
             imageResult = mainViewModel.getWallImage()
+
             if (imageResult is Result.Success) {
-                println("got image")
+                mainViewModel.storeWallImage(imageResult.data)
                 runOnUiThread {
                     val imageView = findViewById<ImageView>(R.id.wall) as ImageView
                     imageView.setImageBitmap(imageResult.data)
@@ -143,6 +139,7 @@ class MainActivity : AppCompatActivity(){
             }
         }
     }
+
 
     // Select wall
     private fun gotoWall() {

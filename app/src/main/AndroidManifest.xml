@@ -15,20 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
-
-        <activity android:name=".search.SearchActivity"
+        <activity
+            android:name=".search.SearchActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
         </activity>
-
         <activity
             android:name=".main.MainActivity"
             android:exported="true"
@@ -37,17 +38,15 @@
                 android:name="android.app.default_searchable"
                 android:value="com.example.pbrg_android.search.SearchActivity" />
         </activity>
-
         <activity
             android:name=".activities.BootActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".login.LoginActivity"
             android:exported="true">
@@ -58,7 +57,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".register.RegisterActivity"
             android:exported="true">
@@ -68,38 +66,71 @@
                 <category android:name="register" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".login.LoginActivity" />
         </activity>
-
-        <activity android:name=".wall.WallActivity"
+        <activity
+            android:name=".wall.WallActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="wall" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
         </activity>
-
-        <activity android:name=".route.RouteActivity"
+        <activity
+            android:name=".route.RouteActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="route" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".wall.WallActivity" />
         </activity>
+        <activity
+            android:name=".routeGen.RouteGenActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="routeGen" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".wall.WallActivity" />
+        </activity>
+        <activity
+            android:name=".setting.SettingActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="setting" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".main.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

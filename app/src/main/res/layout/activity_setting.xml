@@ -3,54 +3,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".setting.SettingActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/wall_toolbar"
+        android:id="@+id/setting_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:contentInsetLeft="0dp"
         android:contentInsetStart="0dp"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="0dp"
+        android:contentInsetLeft="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetEnd="0dp"
+        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-        <TextView
-            android:id="@+id/selectedGymName"
-            android:layout_width="128dp"
-            android:layout_height="wrap_content"
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="96dp"
+            android:layout_height="match_parent"
             android:layout_gravity="left|center_vertical"
+            android:layout_margin="0dp"
+            android:cropToPadding="false"
+            android:padding="16dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/displayName"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
             android:padding="8dp"
-            android:text="@string/selected_gym" />
+            android:text="Username" />
     </androidx.appcompat.widget.Toolbar>
 
     <Button
-        android:id="@+id/generateNewRoute"
-        android:layout_width="352dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="16dp"
-        android:text="Generate New Route"
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
         android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wall_toolbar" />
-
-    <ListView
-        android:id="@+id/routeList"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/generateNewRoute"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
