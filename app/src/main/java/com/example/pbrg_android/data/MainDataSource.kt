@@ -102,4 +102,49 @@ class MainDataSource @Inject constructor(private val context: Context) {
             result
         }
     }
+
+    suspend fun getPrimaryGym(): Result<String> {
+        return withContext(Dispatchers.IO) {
+            var result: Result<String>
+            result = Result.Success("")
+
+            // POST get gym request
+            try {
+                val data = JSONObject("""{}""")
+                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetPrimaryGym"
+
+                val requestQueue = Volley.newRequestQueue(context)
+                var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
+                val jsonObjRequest: JsonObjectRequest = object: JsonObjectRequest(
+                    Method.POST, url, data, future, future){
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val sessionId: String = ConnectViaSession(context).getSession()!!
+                        return if(sessionId != "") {
+                            var headers: MutableMap<String, String> = mutableMapOf<String, String>()
+                            headers["Cookie"] = "JSESSIONID=$sessionId"
+                            headers
+                        } else {
+                            super.getHeaders()
+                        }
+                    }
+                }
+                requestQueue.add(jsonObjRequest)
+
+                result = try {
+                    val response: JSONObject = future.get()
+                    println(response.toString())
+                    Result.Success(response.getString("gymName"))
+                } catch (e: Throwable) {
+                    println("11111111111111111error $e")
+                    Result.Error(IOException("Error getting selected gym", e))
+                }
+
+            } catch (e: Throwable) {
+                println("-------------------error $e")
+                result = Result.Error(IOException("Error getting selected gym", e))
+            }
+
+            result
+        }
+    }
 }

@@ -7,6 +7,10 @@ import com.android.volley.toolbox.Volley
 import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -17,7 +21,6 @@ import javax.inject.Inject
 class WallDataSource @Inject constructor(private val context: Context) {
 
     suspend fun routeSearch(): Result<Array<RouteListItem>> {
-
         return withContext(Dispatchers.IO) {
             var result: Result<Array<RouteListItem>>
             var fakeRoutes: Array<RouteListItem> = arrayOf()
@@ -48,9 +51,19 @@ class WallDataSource @Inject constructor(private val context: Context) {
                 result = try {
                     // Extract search result as a list of gyms
                     val response: JSONObject = future.get()
-                    val jsonArray: JSONArray = response.getJSONArray("routes")
-                    var routeList: Array<RouteListItem> = arrayOf()
-                    // TODO: obtain routes from json array
+                    println(response.toString())
+                    println(response.get("routes").toString())
+
+                    val jsonArray = response.get("routes") as JSONArray
+
+                    var routeList: Array<RouteListItem> = Array(jsonArray.length()) {
+                        val route = jsonArray.getJSONObject(it)
+                        RouteListItem(route.getInt("routeId"), route.getString("routeName"), route.getInt("difficulty"))
+                    }
+
+                    routeList.forEach {
+                        println(it.toString())
+                    }
 
                     Result.Success(routeList)
                 } catch (e: Throwable) {

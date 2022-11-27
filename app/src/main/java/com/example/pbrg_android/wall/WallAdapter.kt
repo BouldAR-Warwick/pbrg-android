@@ -45,7 +45,7 @@ class WallAdapter(private val data: List<RouteListItem>?) : BaseAdapter(),
         viewHolder = view!!.tag as ViewHolder
         // set data
         viewHolder!!.routeItemName!!.text = data!![i].routeName
-        viewHolder!!.routeItemDifficulty!!.text = data!![i].difficulty
+        viewHolder!!.routeItemDifficulty!!.text = data!![i].difficulty.toString()
         viewHolder!!.routeID!!.text = data!![i].routeID.toString()
 
         return view

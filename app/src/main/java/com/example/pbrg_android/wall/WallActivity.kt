@@ -14,6 +14,11 @@ import com.example.pbrg_android.Application
 import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.route.RouteActivity
 import com.example.pbrg_android.routeGen.RouteGenActivity
+import com.example.pbrg_android.utility.Result
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.IOException
 import javax.inject.Inject
 
 class WallActivity : AppCompatActivity() {
@@ -23,9 +28,6 @@ class WallActivity : AppCompatActivity() {
 
     //ListView component
     private var routeList: ListView? = null
-
-    //ListView data source
-    private var data: MutableList<RouteListItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Creates an instance of Login component by grabbing the factory from the app graph
@@ -48,12 +50,23 @@ class WallActivity : AppCompatActivity() {
         }
         routeList = findViewById<View>(R.id.routeList) as ListView
 
+        var adapter = WallAdapter(null)
+        var result: Result<Array<RouteListItem>> = Result.Error(IOException("Error getting routes"))
+        GlobalScope.launch(Dispatchers.IO) {
+            // Get route data through data source
+            result = wallViewModel.getWall()
+            if (result is Result.Success) {
+                runOnUiThread {
+                    adapter = WallAdapter((result as Result.Success<Array<RouteListItem>>).data.toList())
+                    routeList!!.adapter = adapter
+                }
+            } else {
 
-        // Get route data through data source
-        data = wallViewModel.getWall()
+            }
+        }
 
-        val adapter = WallAdapter(data)
-        routeList!!.adapter = adapter
+
+
 
         // ListView item click event
         routeList!!.setOnItemClickListener { _, _, i, l ->
@@ -81,6 +94,10 @@ class WallActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+    }
+
+    fun getWall() {
+
     }
 
 }

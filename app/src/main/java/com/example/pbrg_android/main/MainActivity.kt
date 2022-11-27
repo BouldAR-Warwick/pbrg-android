@@ -76,8 +76,8 @@ class MainActivity : AppCompatActivity(){
             // Wall button
             wall.setOnClickListener { gotoWall() }
 
+            // Setting|displayName
             displayName.setOnClickListener { gotoSetting(displayName.text.toString()) }
-
             setting.setOnClickListener { gotoSetting(displayName.text.toString()) }
 
             // If the MainActivity needs to be displayed, we get the UserComponent
@@ -101,16 +101,31 @@ class MainActivity : AppCompatActivity(){
 
     // Display the primary gym or selected gym from searched result
     private fun displaySelectedGym() {
-        // TODO: display primary gym
-        val selectedGym: String? = intent.getStringExtra("selectedGym")
+        var selectedGym: String? = intent.getStringExtra("selectedGym")
         println("selected gym is $selectedGym")
 
         if (selectedGym != null) {
             findViewById<TextView>(R.id.selected_gym).apply {
                 text = selectedGym
             }
-            getGym(selectedGym)
+            getGym(selectedGym!!)
+        } else {
+            // Display primary gym
+            GlobalScope.launch(Dispatchers.IO) {
+                var result: Result<String> = mainViewModel.getPrimaryGym()
+                if (result is Result.Success) {
+                    selectedGym = result.data
+                    findViewById<TextView>(R.id.selected_gym).apply {
+                        text = selectedGym
+                    }
+                    getGym(selectedGym!!)
+                } else {
+                    println("Error getting primary gym")
+                }
+            }
         }
+
+
     }
 
     private fun getGym(selectedGym: String) {

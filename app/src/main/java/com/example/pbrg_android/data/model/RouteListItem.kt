@@ -6,5 +6,5 @@ package com.example.pbrg_android.data.model
 data class RouteListItem (
      val routeID: Int,
      val routeName: String,
-     val difficulty: String
+     val difficulty: Int
 )

@@ -17,6 +17,12 @@ import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val mainDataSource: MainDataSource) : ViewModel() {
+    suspend fun getPrimaryGym(): Result<String> {
+        return withContext(Dispatchers.IO) {
+            var result: Result<String> = mainDataSource.getPrimaryGym()
+            result
+        }
+    }
 
     suspend fun getGym(selectedGym: String): Result<Int> {
         return withContext(Dispatchers.IO) {
