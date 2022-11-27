@@ -81,7 +81,7 @@ class WallActivity : AppCompatActivity() {
                 putExtra("routeID", route.routeID)
                 putExtra("routeName", route.routeName)
                 putExtra("difficulty", route.difficulty)
-                putExtra("selectedGym", intent.getStringExtra("selectedGym"))
+                putExtra("selectedGym", selectedGymName)
             }
             startActivity(intent)
         }

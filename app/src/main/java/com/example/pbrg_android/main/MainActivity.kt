@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity(){
     @Inject
     lateinit var mainViewModel: MainViewModel
 
+    private var currentGym: String = ""
+
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -109,6 +111,7 @@ class MainActivity : AppCompatActivity(){
                 text = selectedGym
             }
             getGym(selectedGym!!)
+            currentGym = selectedGym!!
         } else {
             // Display primary gym
             GlobalScope.launch(Dispatchers.IO) {
@@ -119,13 +122,12 @@ class MainActivity : AppCompatActivity(){
                         text = selectedGym
                     }
                     getGym(selectedGym!!)
+                    currentGym = selectedGym!!
                 } else {
                     println("Error getting primary gym")
                 }
             }
         }
-
-
     }
 
     private fun getGym(selectedGym: String) {
@@ -160,7 +162,7 @@ class MainActivity : AppCompatActivity(){
     private fun gotoWall() {
         val intent: Intent = Intent(this, WallActivity::class.java).apply {
             val selectedGym: String? = intent.getStringExtra("selectedGym")
-            putExtra("selectedGym", selectedGym)
+            putExtra("selectedGym", currentGym)
         }
         startActivity(intent)
     }

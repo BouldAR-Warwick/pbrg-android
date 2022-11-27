@@ -46,9 +46,10 @@ class RouteActivity : AppCompatActivity(){
         val routeImage = binding.routeImage
 
         selectedGymName.text = intent.getStringExtra("selectedGym")
+        println(intent.getStringExtra("selectedGym"))
         val routeID = intent.getIntExtra("routeID", 0)
         selectedRouteName.text = intent.getStringExtra("routeName")
-        difficulty.text = intent.getStringExtra("difficulty")
+        difficulty.text = "V${intent.getIntExtra("difficulty", -1).toString()}"
 
         // Get route image
         getRouteSequence(routeImage, routeID)
