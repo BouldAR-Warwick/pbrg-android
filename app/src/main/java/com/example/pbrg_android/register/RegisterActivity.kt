@@ -10,8 +10,10 @@ import android.text.TextWatcher
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.example.pbrg_android.Application
+import com.example.pbrg_android.R
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.databinding.ActivityRegisterBinding
 import com.example.pbrg_android.login.EXTRA_MESSAGE
@@ -27,7 +29,7 @@ class RegisterActivity  : AppCompatActivity() {
     @Inject
     lateinit var registerViewModel: RegisterViewModel
 
-    private val delay: Long = 600 // 1 seconds after user stops typing
+    private val delay: Long = 600 // 600ms after user stops typing
     private var lastTextEdit: Long = 0
     private val handler = Handler(Looper.getMainLooper())
 
@@ -40,6 +42,13 @@ class RegisterActivity  : AppCompatActivity() {
 
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Set toolbar with back button
+        var toolbar: Toolbar = findViewById(R.id.register_toolbar)
+        toolbar.title = ""
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+
 
         val username = binding.registerUsername
         val password = binding.registerPassword

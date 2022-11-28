@@ -13,6 +13,7 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_log_in">LOG IN</string>
     <string name="action_sign_up">SIGN UP</string>

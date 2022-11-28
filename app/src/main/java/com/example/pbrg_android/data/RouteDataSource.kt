@@ -45,9 +45,10 @@ class RouteDataSource @Inject constructor(private val context: Context) {
                 requestQueue.add(jsonObjRequest)
 
                 result = try {
-                    val response: JSONObject = future.get()
-                    Result.Success(response.getInt("rid"))
+//                    val response: JSONObject = future.get()
+                    Result.Success(1)
                 } catch (e: Throwable) {
+                    println("eeeeeeeeeeeerror $e")
                     Result.Error(IOException("Error getting selected gym", e))
                 }
 
@@ -68,7 +69,7 @@ class RouteDataSource @Inject constructor(private val context: Context) {
             // POST route image request
             try {
                 val data = JSONObject("""{"routeID":$routeID}""")
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetRoute"
+                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetRouteImage"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<Bitmap> = RequestFuture.newFuture()

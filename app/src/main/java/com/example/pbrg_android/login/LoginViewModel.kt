@@ -70,9 +70,9 @@ class LoginViewModel @Inject constructor(private val userManager: UserManager) :
     // TODO: change email to username A placeholder username validation check
     private fun isUserNameValid(username: String): Boolean {
         return if (username.contains('@')) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+            Patterns.EMAIL_ADDRESS.matcher(username).matches() && username.length >= 4
         } else {
-            username.isNotBlank()
+            username.length >= 4
         }
     }
 

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.Observer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
@@ -28,6 +30,10 @@ class LoginActivity : AppCompatActivity() {
     // @Inject annotated fields will be provided by Dagger
     @Inject
     lateinit var loginViewModel: LoginViewModel
+
+    private val delay: Long = 600 // 600ms after user stops typing
+    private var lastTextEdit: Long = 0
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Creates an instance of Login component by grabbing the factory from the app graph
@@ -76,47 +82,81 @@ class LoginActivity : AppCompatActivity() {
             finish()
         })
 
-        signup!!.setOnClickListener{
-            val intent: Intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+        val usernameChecker = Runnable{
+            if (System.currentTimeMillis() > lastTextEdit + delay - 500) {
+                loginViewModel.usernameChanged(username.text.toString())
+                loginViewModel.checkWholeForm(
+                    username.text.toString(),
+                    password.text.toString(),
+                )
+            }
         }
 
-        username.afterTextChanged { it ->
-            loginViewModel.usernameChanged(it)
-
-            loginViewModel.checkWholeForm(
-                username.text.toString(),
-                password.text.toString()
-            )
-        }
-
-        password.apply {
-            afterTextChanged { it ->
-                loginViewModel.passwordChanged(it)
+        val passwordChecker = Runnable{
+            if (System.currentTimeMillis() > lastTextEdit + delay - 500) { loginViewModel.passwordChanged(password.text.toString())
+                loginViewModel.passwordChanged(password.text.toString())
 
                 loginViewModel.checkWholeForm(
                     username.text.toString(),
                     password.text.toString()
                 )
             }
+        }
 
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString(),
-                            stayLoggedIn!!.isChecked
-                        )
-                }
-                false
+
+        username.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                //avoid triggering event when text is empty
+                if (s.isNotEmpty()) {
+                    lastTextEdit = System.currentTimeMillis()
+                    handler.postDelayed(usernameChecker,delay)}
+
             }
 
-
-            login.setOnClickListener {
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString(), stayLoggedIn!!.isChecked)
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                handler.removeCallbacks(usernameChecker)
             }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,count: Int, after: Int) {}
+        })
+
+
+        password.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                //avoid triggering event when text is empty
+                if (s.isNotEmpty()) {
+                    lastTextEdit = System.currentTimeMillis()
+                    handler.postDelayed(passwordChecker,delay)}
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                handler.removeCallbacks(passwordChecker)
+            }
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,count: Int, after: Int) {}
+        })
+
+        signup!!.setOnClickListener{
+            val intent: Intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
+
+        password.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE ->
+                    loginViewModel.login(
+                        username.text.toString(),
+                        password.text.toString(),
+                        stayLoggedIn!!.isChecked
+                    )
+            }
+            false
+        }
+
+
+        login.setOnClickListener {
+            loading.visibility = View.VISIBLE
+            loginViewModel.login(username.text.toString(), password.text.toString(), stayLoggedIn!!.isChecked)
         }
     }
 
