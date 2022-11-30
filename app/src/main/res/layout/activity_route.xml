@@ -13,11 +13,13 @@
         android:background="?attr/colorPrimary"
         android:contentInsetStart="0dp"
         android:contentInsetLeft="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetEnd="0dp"
         android:elevation="4dp"
+        app:contentInsetStartWithNavigation="0dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
-        app:contentInsetStartWithNavigation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,7 +27,7 @@
 
         <TextView
             android:id="@+id/selectedGymName"
-            android:layout_width="128dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:padding="8dp"
@@ -33,7 +35,7 @@
 
         <TextView
             android:id="@+id/difficulty"
-            android:layout_width="72dp"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:padding="8dp"
@@ -43,7 +45,7 @@
             android:id="@+id/selectedRouteName"
             android:layout_width="128dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
+            android:layout_gravity="left|center_vertical"
             android:padding="8dp"
             android:text="@string/selected_route" />
     </androidx.appcompat.widget.Toolbar>
