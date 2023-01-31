@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- allow internet connection -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".Application"
@@ -131,6 +133,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />
         </activity>
+
+        <!-- ARCore also requires the AR feature -->
+        <meta-data android:name="com.google.ar.core" android:value="required" />
+
     </application>
+
 
 </manifest>
