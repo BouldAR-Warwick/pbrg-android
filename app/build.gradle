@@ -51,6 +51,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "com.google.dagger:dagger:2.44.2" // Dependency injection, build dependency graph
     implementation 'com.google.ar:core:1.35.0'// ARCore
+    implementation 'de.javagl:obj:0.3.0' // ARCore required
     kapt "com.google.dagger:dagger-compiler:2.44.2" // Compiler required by Dagger
     annotationProcessor 'com.google.dagger:dagger-compiler:2.44.2'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.44.2'

@@ -1,11 +1,14 @@
 package com.example.pbrg_android.route
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pbrg_android.Application
+import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.databinding.ActivityRouteBinding
+import com.example.pbrg_android.routeVis.RouteVisARActivity
 import com.example.pbrg_android.utility.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -56,6 +59,9 @@ class RouteActivity : AppCompatActivity(){
 
         viewAR.setOnClickListener {
             //TODO: Add AR functionality
+            val intent = Intent(this, RouteVisARActivity::class.java).apply{
+            }
+            startActivity(intent)
         }
 
         deleteRoute.setOnClickListener {
