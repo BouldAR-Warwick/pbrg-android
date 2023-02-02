@@ -119,6 +119,25 @@
                 android:value=".wall.WallActivity" />
         </activity>
         <activity
+            android:name=".routeVis.RouteVisARActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="routeVis" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".routeGen.RouteGenActivity" />
+<!--            <meta-data-->
+<!--                android:name="android.support.PARENT_ACTIVITY"-->
+<!--                android:value=".route.RouteActivity" />-->
+        </activity>
+
+        <activity
             android:name=".setting.SettingActivity"
             android:exported="true"
             android:launchMode="singleTop">
@@ -131,7 +150,8 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".main.MainActivity" />
+                android:value=".main.MainActivity"
+                />
         </activity>
 
         <!-- ARCore also requires the AR feature -->

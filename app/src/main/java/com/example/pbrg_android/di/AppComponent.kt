@@ -7,6 +7,7 @@ import com.example.pbrg_android.main.MainViewModel
 import com.example.pbrg_android.register.RegisterComponent
 import com.example.pbrg_android.route.RouteComponent
 import com.example.pbrg_android.routeGen.RouteGenComponent
+import com.example.pbrg_android.routeVis.RouteVisARComponent
 import com.example.pbrg_android.search.SearchActivity
 import com.example.pbrg_android.search.SearchViewModel
 import com.example.pbrg_android.setting.SettingActivity
@@ -39,6 +40,7 @@ interface AppComponent {
     fun wallComponent(): WallComponent.Factory
     fun routeComponent(): RouteComponent.Factory
     fun routeGenComponent(): RouteGenComponent.Factory
+    fun routeVisARComponent(): RouteVisARComponent.Factory
     fun userManager(): UserManager
     fun searchViewModel(): SearchViewModel
     fun mainViewModel(): MainViewModel
