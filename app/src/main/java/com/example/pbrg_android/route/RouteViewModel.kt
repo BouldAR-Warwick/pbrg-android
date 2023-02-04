@@ -3,6 +3,7 @@ package com.example.pbrg_android.route
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import com.example.pbrg_android.data.RouteDataSource
+import com.example.pbrg_android.data.model.HoldData
 import com.example.pbrg_android.utility.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -24,6 +25,14 @@ class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataS
         var result: Result<Bitmap>
         return withContext(Dispatchers.IO) {
             result = routeDataSource.getRouteImage(routeID)
+            result
+        }
+    }
+
+    suspend fun getRouteInfo(routeID: Int): Result<Array<HoldData>> {
+        var result: Result<Array<HoldData>>
+        return withContext(Dispatchers.IO) {
+            result = routeDataSource.getRouteInfo(routeID)
             result
         }
     }

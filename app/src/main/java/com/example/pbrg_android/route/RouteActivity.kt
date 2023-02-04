@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pbrg_android.Application
+import com.example.pbrg_android.data.model.HoldData
 import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.databinding.ActivityRouteBinding
 import com.example.pbrg_android.routeVis.RouteVisARActivity
@@ -90,7 +91,22 @@ class RouteActivity : AppCompatActivity(){
             } else {
                 println("Error getting selected route")
             }
-
+        }
+    }
+    private fun getRouteInfo(routeID: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            var result: Result<Int> = routeViewModel.getRoute(routeID)
+            if (result is Result.Success) {
+                println("got selected route")
+                var routeInfo: Result<Array<HoldData>> = routeViewModel.getRouteInfo(routeID)
+                if (routeInfo is Result.Success) {
+                    // TODO do something with route info
+                } else {
+                    println("Error getting route image")
+                }
+            } else {
+                println("Error getting selected route")
+            }
         }
     }
 }

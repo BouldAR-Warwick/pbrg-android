@@ -7,10 +7,13 @@ import com.android.volley.toolbox.ImageRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.Volley
+import com.example.pbrg_android.data.model.HoldData
+import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.utility.ConnectViaSession
 import com.example.pbrg_android.utility.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import javax.inject.Inject
@@ -97,6 +100,57 @@ class RouteDataSource @Inject constructor(private val context: Context) {
 
             } catch (e: Throwable) {
                 result = Result.Error(IOException("Error getting routes", e))
+            }
+
+            result
+        }
+    }
+
+    suspend fun getRouteInfo(routeID: Int): Result<Array<HoldData>> {
+
+        return withContext(Dispatchers.IO) {
+            var result: Result<Array<HoldData>>
+            result = Result.Error(IOException("Error loading image"))
+
+            // POST route info request
+            try {
+                val data = JSONObject("""{"routeID":$routeID}""")
+                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetRouteInfo"
+
+                val requestQueue = Volley.newRequestQueue(context)
+                var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
+                val jsonObjRequest: JsonObjectRequest = object : JsonObjectRequest(
+                    Method.POST, url, data, future, future){
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val sessionId: String = ConnectViaSession(context).getSession()!!
+                        return if(sessionId != "") {
+                            var headers: MutableMap<String, String> = mutableMapOf<String, String>()
+                            headers["Cookie"] = "JSESSIONID=$sessionId"
+                            headers
+                        } else {
+                            super.getHeaders()
+                        }
+                    }
+                }
+                requestQueue.add(jsonObjRequest)
+
+                result = try {
+                    val response: JSONObject = future.get()
+                    val jsonArray = response.get("info") as JSONArray
+
+                    var holdList: Array<HoldData> = Array(jsonArray.length()) {
+                        val routeInfo = jsonArray.getJSONObject(it)
+                        HoldData(routeInfo.getInt("x"), routeInfo.getInt("y"))
+                    }
+
+                    Result.Success(holdList)
+
+                } catch (e: Throwable) {
+                    Result.Error(IOException("Error getting route info", e))
+                }
+
+            } catch (e: Throwable) {
+                result = Result.Error(IOException("Error getting route info", e))
             }
 
             result
