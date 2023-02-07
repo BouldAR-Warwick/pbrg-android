@@ -56,7 +56,8 @@ class UserManager @Inject constructor(
     suspend fun login(username: String, password: String, stayLoggedIn: Boolean): Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
             // call dataSource login method
-            val result = loginDataSource.login(LoginData(username, password, stayLoggedIn))
+            val baseUrl: String = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
+            val result = loginDataSource.login(baseUrl, LoginData(username, password, stayLoggedIn))
             // return true if result contains LoggedInUser data
             if (result is Result.Success) {
                 setLoggedInUser(result.data)

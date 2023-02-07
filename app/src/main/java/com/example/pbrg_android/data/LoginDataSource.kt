@@ -25,7 +25,7 @@ import javax.inject.Inject
  */
 class LoginDataSource @Inject constructor(private val context: Context) {
 
-    suspend fun login(loginData: LoginData) : Result<LoggedInUser> {
+    suspend fun login(baseUrl: String, loginData: LoginData) : Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
             var result: Result<LoggedInUser>
             val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane")
@@ -33,7 +33,8 @@ class LoginDataSource @Inject constructor(private val context: Context) {
             try {
                 val data = JSONObject(Gson().toJson(loginData))
 //                val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Login"
+                val url = "$baseUrl/Login"
+                println(url)
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -47,7 +48,6 @@ class LoginDataSource @Inject constructor(private val context: Context) {
                 }
 
                 requestQueue.add(jsonObjRequest)
-
                 try {
                     val response : JSONObject = future.get()
                     val sessionId = ConnectViaSession(context).getSession()
@@ -57,6 +57,7 @@ class LoginDataSource @Inject constructor(private val context: Context) {
                         response.getString("username"))
                     result = Result.Success(existingUser)
                 } catch (e: Throwable) {
+                    println(e.message)
                     // TODO: handle exception
                 }
 

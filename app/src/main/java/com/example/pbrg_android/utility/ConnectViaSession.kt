@@ -18,26 +18,33 @@ class ConnectViaSession(private val context: Context) {
     fun getSession(response: NetworkResponse) {
         // get header
         println(response.allHeaders.toString())
-        mHeader = response.allHeaders as MutableList<Header>
-        var rawCookies: LoggedInUser
-        // iterate headers to find cookies
-        mHeader.forEach {
-            val header: JSONObject  =JSONObject(Gson().toJson(it))
-            if (header["mName"] == "Set-Cookie") {
-                val cookieContent: String = header["mValue"].toString()
-                println(cookieContent.substring(0, cookieContent.indexOf(";")))
-                val key: String = cookieContent.substring(0, cookieContent.indexOf("="))
-                val value: String = cookieContent.substring(cookieContent.indexOf("=")+1, cookieContent.indexOf(";"))
-                cookies.set(key, value)
+        try {
+
+
+            mHeader = response.allHeaders as MutableList<Header>
+            var rawCookies: LoggedInUser
+            // iterate headers to find cookies
+            mHeader.forEach {
+                val header: JSONObject  =JSONObject(Gson().toJson(it))
+                if (header["mName"] == "Set-Cookie") {
+                    val cookieContent: String = header["mValue"].toString()
+                    println(cookieContent.substring(0, cookieContent.indexOf(";")))
+                    val key: String = cookieContent.substring(0, cookieContent.indexOf("="))
+                    val value: String = cookieContent.substring(cookieContent.indexOf("=")+1, cookieContent.indexOf(";"))
+                    cookies.set(key, value)
+                }
             }
+            cookies.forEach{
+                println("${it.key}, ${it.value}")
+            }
+            sesstionID = cookies.get("JSESSIONID")
+            println("sessionid is $sesstionID")
+            // save session id using mmkv
+            saveSession(sesstionID)
+        } catch (e: Throwable) {
+            println("ERROR")
+            println(e.stackTraceToString())
         }
-        cookies.forEach{
-            println("${it.key}, ${it.value}")
-        }
-        sesstionID = cookies.get("JSESSIONID")
-        println("sessionid is $sesstionID")
-        // save session id using mmkv
-        saveSession(sesstionID)
     }
 
     // save session id with mmkv

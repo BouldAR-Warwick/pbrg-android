@@ -18,6 +18,7 @@ import org.json.JSONObject
 import java.io.IOException
 import javax.inject.Inject
 
+
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
