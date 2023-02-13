@@ -56,10 +56,12 @@ class RouteActivity : AppCompatActivity(){
         difficulty.text = "V${intent.getIntExtra("difficulty", -1).toString()}"
 
         // Get route image
-        getRouteSequence(routeImage, routeID)
+//        getRouteSequence(routeImage, routeID)
+
+        // Get route image with route info highlighted
+        getRouteInfo((routeID))
 
         viewAR.setOnClickListener {
-            //TODO: Add AR functionality
             val intent = Intent(this, RouteVisARActivity::class.java).apply{
             }
             startActivity(intent)
@@ -102,10 +104,10 @@ class RouteActivity : AppCompatActivity(){
                 if (routeInfo is Result.Success) {
                     // TODO do something with route info
                 } else {
-                    println("Error getting route image")
+                    println("Error getting route info")
                 }
             } else {
-                println("Error getting selected route")
+                println("Error getting selected route info")
             }
         }
     }
