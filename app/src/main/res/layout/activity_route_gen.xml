@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".routeGen.RouteGenActivity">
+    tools:context=".routeGen.RouteGenActivity"
+    android:background="#26886C91"
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/route_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="#886c91"
         android:contentInsetStart="0dp"
         android:contentInsetLeft="0dp"
         android:contentInsetRight="0dp"
@@ -33,7 +35,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical|center_horizontal"
             android:padding="-16dp"
-            android:text="@string/selected_gym" />
+            android:text="@string/selected_gym"
+            android:textStyle="bold"
+            />
     </androidx.appcompat.widget.Toolbar>
 
 
@@ -43,10 +47,12 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
+        android:background="@drawable/bg_white"
         android:clickable="false"
         android:cursorVisible="false"
         android:focusable="false"
         android:inputType="none"
+        android:paddingStart="10pt"
         app:layout_constraintEnd_toStartOf="@+id/generate"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +68,7 @@
         android:enabled="false"
         android:text="@string/generate"
         android:textAllCaps="false"
+        android:background="@drawable/bg_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/select_difficulty"
@@ -78,6 +85,7 @@
         android:enabled="false"
         android:text="@string/save_route"
         android:textAllCaps="false"
+        android:background="@drawable/bg_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -96,6 +104,7 @@
         android:enabled="false"
         android:text="@string/view_route_in_AR"
         android:textAllCaps="false"
+        android:background="@drawable/bg_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/save_route"
         app:layout_constraintHorizontal_bias="0.5"

@@ -3,38 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#26886C91"
+
+    >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/wall_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:contentInsetLeft="0dp"
+        android:background="#886C91"
         android:contentInsetStart="0dp"
+        android:contentInsetLeft="0dp"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:contentInsetLeft="0dp"
         app:contentInsetStart="0dp"
         app:contentInsetStartWithNavigation="0dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
         <TextView
             android:id="@+id/selectedGymName"
             android:layout_width="256dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:padding="8dp"
-            android:text="@string/selected_gym" />
+            android:text="@string/selected_gym"
+            android:textStyle="bold"
+            />
     </androidx.appcompat.widget.Toolbar>
 
     <Button
         android:id="@+id/generateNewRoute"
-        android:layout_width="352dp"
-        android:layout_height="72dp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/bg_white"
         android:text="Generate New Route"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +56,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#26886C91"
     tools:context=".route.RouteActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/route_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="#886c91"
         android:contentInsetStart="0dp"
         android:contentInsetLeft="0dp"
         android:contentInsetRight="0dp"
@@ -23,7 +24,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        >
 
         <TextView
             android:id="@+id/selectedGymName"
@@ -31,7 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:padding="8dp"
-            android:text="@string/selected_gym" />
+            android:text="@string/selected_gym"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteY="10dp" />
 
         <TextView
             android:id="@+id/difficulty"
@@ -39,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:padding="8dp"
+            android:textStyle="bold"
             android:text="@string/difficulty" />
 
         <TextView
@@ -47,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:padding="8dp"
+            android:textStyle="bold"
             android:text="@string/selected_route" />
     </androidx.appcompat.widget.Toolbar>
 
@@ -57,6 +63,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/view_route_in_AR"
         android:textAllCaps="false"
+        android:background="@drawable/bg_white"
         app:layout_constraintBottom_toTopOf="@+id/commentRoute"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -71,6 +78,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/comment_route"
         android:textAllCaps="false"
+        android:background="@drawable/bg_white"
         app:layout_constraintBottom_toTopOf="@+id/deleteRoute"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -85,6 +93,7 @@
         android:layout_marginBottom="16dp"
         android:text="@string/delete_route"
         android:textAllCaps="false"
+        android:background="@drawable/bg_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

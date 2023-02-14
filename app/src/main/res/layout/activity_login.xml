@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#26886C91"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -17,9 +18,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="168dp"
         android:autofillHints=""
+        android:background="@drawable/bg_white"
         android:hint="@string/prompt_username"
+        android:includeFontPadding="false"
         android:inputType="text|textEmailAddress"
         android:minHeight="48dp"
+        android:paddingStart="10pt"
         android:selectAllOnFocus="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,11 +37,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:autofillHints=""
+        android:background="@drawable/bg_white"
         android:hint="@string/prompt_password"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
         android:minHeight="48dp"
+        android:paddingStart="10pt"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,6 +56,7 @@
         android:layout_gravity="start"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="64dp"
+        android:background="@drawable/bg_white"
         android:enabled="false"
         android:text="@string/action_log_in"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -57,7 +64,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/signup"
         app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.772" />
+        app:layout_constraintVertical_bias="0.788" />
 
     <Button
         android:id="@+id/signup"
@@ -65,15 +72,13 @@
         android:layout_height="50dp"
         android:layout_gravity="start"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="64dp"
+        android:background="@drawable/bg_white"
         android:enabled="true"
         android:text="@string/action_sign_up"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/login"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
-        app:layout_constraintVertical_bias="0.784" />
+        app:layout_constraintTop_toTopOf="@+id/login" />
 
     <ProgressBar
         android:id="@+id/loading"
@@ -101,11 +106,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
-    <CheckBox
+    <RadioButton
         android:id="@+id/stayLoggedIn"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
+        android:buttonTint="#886c91"
+        android:checked="true"
         android:text="@string/stay_logged_in"
         app:layout_constraintBottom_toTopOf="@+id/signup"
         app:layout_constraintStart_toStartOf="parent"
