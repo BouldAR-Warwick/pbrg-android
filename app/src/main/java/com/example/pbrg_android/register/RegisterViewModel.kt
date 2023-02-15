@@ -1,6 +1,5 @@
 package com.example.pbrg_android.register
 
-import android.text.TextUtils
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +12,7 @@ import com.example.pbrg_android.user.UserManager
 import com.example.pbrg_android.utility.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 
@@ -45,7 +45,7 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
         val usernameValid = isUserNameValid(username)
         val passwordValid = isPasswordValid(password)
         val confirmPasswordValid = isConfirmPasswordValid(password,confirmPassword)
-        val emailValid = isPasswordValid(email)
+        val emailValid = isEmailValid(email)
 
         val allValid = usernameValid && passwordValid && confirmPasswordValid && emailValid
 
@@ -87,8 +87,10 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
         }
     }
 
+    private val regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}".toRegex()
+
     private fun isEmailValid(email: String): Boolean {
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return !email.isEmpty() && regex.matches(email)
     }
 
     private fun isUserNameValid(username: String): Boolean {

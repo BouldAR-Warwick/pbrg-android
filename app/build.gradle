@@ -74,8 +74,21 @@ dependencies {
     testImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     testImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.10.0' // okhttp3 MockWebServer
-    androidTestImplementation 'androidx.test:runner:1.5.2'
+
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
+    androidTestImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1' // Instrumented testing library
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.arch.core:core-testing:2.1.0' //Helper for other arch dependencies, including JUnit test rules that can be used with LiveData.
+    androidTestImplementation 'org.mockito:mockito-core:5.1.1' // Mockito framework for unit testing
+//    androidTestImplementation 'org.mockito:mockito-inline:5.1.1' //
+//    androidTestImplementation 'org.mockito.kotlin:mockito-kotlin:4.1.0'    // Mockito-kotlin
+    androidTestImplementation 'org.robolectric:robolectric:4.9.2'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.10.0' // okhttp3 MockWebServer
+    androidTestImplementation 'org.mockito:mockito-android:5.1.1'
 }
