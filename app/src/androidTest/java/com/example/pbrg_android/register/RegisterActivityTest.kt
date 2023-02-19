@@ -94,6 +94,7 @@ class RegisterActivityTest {
         intending(toPackage("com.example.pbrg_android")).respondWith(result)
 
         onView(withId(R.id.register)).perform(click())
+        delay(600L)
 
         intended(allOf(
                 hasAction("android.intent.action.MAIN"),

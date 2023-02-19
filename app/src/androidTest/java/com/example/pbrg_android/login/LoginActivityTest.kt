@@ -14,6 +14,7 @@ import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.ComponentNameMatchers.hasShortClassName
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.intent.rule.IntentsRule
 import com.example.pbrg_android.R
@@ -43,6 +44,22 @@ class LoginActivityTest {
     }
 
     @Test
+    fun testSignupPage() = runBlocking {
+        // Start up Tasks screen.
+        val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
+
+        onView(withId(R.id.signup)).perform(click())
+        delay(600L)
+
+        intended(allOf(
+            hasComponent(hasShortClassName(".register.RegisterActivity")),
+            toPackage("com.example.pbrg_android")))
+
+        // Make sure the activity is closed
+        activityScenario.close()
+    }
+
+    @Test
     fun testLoginPage() = runBlocking {
         // Start up Tasks screen.
         val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
@@ -54,7 +71,7 @@ class LoginActivityTest {
         onView(withId(R.id.username)).perform(typeText("t"))
         delay(600L) // add delay by hand
         onView(withId(R.id.username)).check(matches(hasErrorText("Not a valid username")))
-        onView(withId(R.id.username)).perform(typeText("test"))
+        onView(withId(R.id.username)).perform(typeText("test1"))
 
         // Login button still disabled
         onView(withId(R.id.login)).check(matches(isNotEnabled()))
@@ -77,15 +94,10 @@ class LoginActivityTest {
         onView(withId(R.id.stayLoggedIn)).check(matches(isNotChecked()))
 
         // Verify intent
-        val resultData = Intent()
-        resultData.putExtra("displayName", "Jane")
-        val result = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
-        Intents.intending(toPackage("com.example.pbrg_android")).respondWith(result)
-
         onView(withId(R.id.login)).perform(click())
-
+        delay(600L)
         intended(allOf(
-            hasAction("android.intent.action.MAIN"),
+            hasComponent(hasShortClassName(".main.MainActivity")),
             toPackage("com.example.pbrg_android")))
 
         // Make sure the activity is closed
