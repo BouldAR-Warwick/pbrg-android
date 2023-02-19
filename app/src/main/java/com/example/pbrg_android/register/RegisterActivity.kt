@@ -21,7 +21,7 @@ import com.example.pbrg_android.main.MainActivity
 import javax.inject.Inject
 
 
-class RegisterActivity  : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
 

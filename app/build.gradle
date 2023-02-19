@@ -85,7 +85,7 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-core:5.1.1' // Mockito framework for unit testing
 //    androidTestImplementation 'org.mockito:mockito-inline:5.1.1' //
 //    androidTestImplementation 'org.mockito.kotlin:mockito-kotlin:4.1.0'    // Mockito-kotlin
-    androidTestImplementation 'org.robolectric:robolectric:4.9.2'
+//    androidTestImplementation 'org.robolectric:robolectric:4.9.2'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
