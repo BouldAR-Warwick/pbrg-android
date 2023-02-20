@@ -35,7 +35,7 @@
             android:padding="16dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:src="@drawable/logo" />
+            android:src="@drawable/logo_white" />
 
         <TextView
             android:id="@+id/displayName"

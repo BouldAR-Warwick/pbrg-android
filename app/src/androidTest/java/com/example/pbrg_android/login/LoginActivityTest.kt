@@ -136,7 +136,8 @@ class LoginActivityTest {
         activityScenario.close()
     }
 
-    fun drawableIsChanged(@DrawableRes drawableResId: Int): Matcher<View> {
+    // Check if the drawable has changed from the default one
+    private fun drawableIsChanged(@DrawableRes drawableResId: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
             override fun describeTo(description: Description) {
                 description.appendText("with drawable from resource id: ")
@@ -164,7 +165,6 @@ class LoginActivityTest {
     fun testSearchPage() = runBlocking {
         // Start up Tasks screen.
         val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
-
 
         // Go to search activity
         onView(withId(R.id.username)).perform(typeText("testuser"))
@@ -206,8 +206,81 @@ class LoginActivityTest {
         delay(2000L)
         // Test gym image changed
         onView(withId(R.id.wall)).check(matches(drawableIsChanged(R.drawable.wall2)))
-        // Test return
 
+        // Navigate to WallRoutes Activity
+        // Check wall button
+        onView(withId(R.id.wall)).check(matches(isClickable()))
+        onView(withId(R.id.wall)).perform(click())
+        // Verify intent
+        delay(500L)
+        intended(allOf(
+            hasComponent(hasShortClassName(".main.MainActivity")),
+            toPackage("com.example.pbrg_android")))
+        // WallRoutes Activity
+        onView(withId(R.id.selectedGymName)).check(matches(withText("Warwick Sport Centre")))
+        onView(withId(R.id.generateNewRoute)).check(matches(isEnabled()))
+        onView(withId(R.id.routeList)).check(matches(isDisplayed()))
+        onView(withId(R.id.routeList)).check(matches(isClickable()))
+
+        // Route List
+        onData(`is`())
+
+        activityScenario.close()
+    }
+
+    @Test
+    fun testNavigateToSetting() = runBlocking {
+        val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
+
+        // Log in
+        onView(withId(R.id.username)).perform(typeText("testuser"))
+        onView(withId(R.id.password)).perform(typeText("123456"), closeSoftKeyboard())
+        onView(withId(R.id.login)).perform(click())
+        delay(500L)
+        intended(allOf(
+            hasComponent(hasShortClassName(".main.MainActivity")),
+            toPackage("com.example.pbrg_android")))
+
+        // Check account/setting icon
+        onView(withId(R.id.setting)).check(matches(isClickable()))
+
+        // Go to Setting
+        onView(withId(R.id.setting)).perform(click())
+        delay(500L)
+        intended(allOf(
+            hasComponent(hasShortClassName(".login.LoginActivity")),
+            toPackage("com.example.pbrg_android")))
+
+        // Log out is clickable
+        onView(withId(R.id.logout)).check(matches(isClickable()))
+
+        activityScenario.close()
+    }
+
+    @Test
+    fun testNavigateToRoutes() = runBlocking {
+        val activityScenario = ActivityScenario.launch(LoginActivity::class.java)
+
+        // Log in
+        onView(withId(R.id.username)).perform(typeText("testuser"))
+        onView(withId(R.id.password)).perform(typeText("123456"), closeSoftKeyboard())
+        onView(withId(R.id.login)).perform(click())
+        delay(1000L)
+        intended(allOf(
+            hasComponent(hasShortClassName(".main.MainActivity")),
+            toPackage("com.example.pbrg_android")))
+
+        // Check wall button
+        onView(withId(R.id.wall)).check(matches(isClickable()))
+        onView(withId(R.id.wall)).perform(click())
+        // Verify intent
+        delay(1000L)
+        intended(allOf(
+            hasComponent(hasShortClassName(".main.MainActivity")),
+            toPackage("com.example.pbrg_android")))
+        // WallRoutes Activity
+        onView(withId(R.id.selectedGymName)).check(matches(withText("Test Gym1")))
+        onView(withId(R.id.generateNewRoute)).check(matches(isEnabled()))
 
         activityScenario.close()
     }
