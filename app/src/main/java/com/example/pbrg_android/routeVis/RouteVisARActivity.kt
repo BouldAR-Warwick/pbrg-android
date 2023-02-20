@@ -36,6 +36,7 @@ import com.google.ar.core.ArCoreApk.InstallStatus
 import com.google.ar.core.exceptions.*
 import java.io.IOException
 import com.example.pbrg_android.R
+import com.example.pbrg_android.data.model.HoldData
 import com.tencent.mmkv.MMKV
 import java.io.InputStream
 import javax.microedition.khronos.egl.EGLConfig
@@ -91,6 +92,7 @@ class RouteVisARActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     private val backgroundRenderer: BackgroundRenderer = BackgroundRenderer()
     private val augmentedImageRenderer: AugmentedImageRenderer = AugmentedImageRenderer()
     private var shouldConfigureSession = false
+    private var holdDataArray : Array<HoldData> = emptyArray()
 
     // Augmented image configuration and rendering.
     // Load a single image (true) or a pre-generated image database (false).
@@ -101,6 +103,8 @@ class RouteVisARActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     private val augmentedImageMap: MutableMap<Int, Pair<AugmentedImage, Anchor>> = HashMap()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        holdDataArray = intent.getSerializableExtra("holdDataArray") as Array<HoldData>
+
         setContentView(R.layout.activity_route_vis_ar)
         surfaceView = findViewById<GLSurfaceView>(R.id.surface_view)
         val back = findViewById<Button>(R.id.back)
@@ -346,7 +350,7 @@ class RouteVisARActivity : AppCompatActivity(), GLSurfaceView.Renderer {
             val centerAnchor = augmentedImageMap[augmentedImage.index]!!.second
             when (augmentedImage.trackingState) {
                 TrackingState.TRACKING -> augmentedImageRenderer.draw(
-                    viewmtx, projmtx, augmentedImage, centerAnchor, colorCorrectionRgba
+                    viewmtx, projmtx, augmentedImage, centerAnchor, colorCorrectionRgba, holdDataArray
                 )
                 else -> {}
             }

@@ -11,6 +11,7 @@ import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.databinding.ActivityRouteBinding
 import com.example.pbrg_android.routeVis.RouteVisARActivity
 import com.example.pbrg_android.utility.Result
+import com.google.android.material.transition.Hold
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -55,14 +56,16 @@ class RouteActivity : AppCompatActivity(){
         selectedRouteName.text = intent.getStringExtra("routeName")
         difficulty.text = "V${intent.getIntExtra("difficulty", -1).toString()}"
 
+
         // Get route image
 //        getRouteSequence(routeImage, routeID)
 
         // Get route image with route info highlighted
-        getRouteInfo((routeID))
+        val routeInfo : Array<HoldData> =  getRouteInfo(routeID)
 
         viewAR.setOnClickListener {
             val intent = Intent(this, RouteVisARActivity::class.java).apply{
+                putExtra("holdDataArray", routeInfo)
             }
             startActivity(intent)
         }
@@ -95,20 +98,24 @@ class RouteActivity : AppCompatActivity(){
             }
         }
     }
-    private fun getRouteInfo(routeID: Int) {
+    private fun getRouteInfo(routeID: Int) : Array<HoldData>{
+        var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
         GlobalScope.launch(Dispatchers.IO) {
             var result: Result<Int> = routeViewModel.getRoute(routeID)
             if (result is Result.Success) {
                 println("got selected route")
-                var routeInfo: Result<Array<HoldData>> = routeViewModel.getRouteInfo(routeID)
-                if (routeInfo is Result.Success) {
-                    // TODO do something with route info
-                } else {
-                    println("Error getting route info")
-                }
+                routeInfo = routeViewModel.getRouteInfo(routeID)
+
             } else {
                 println("Error getting selected route info")
             }
         }
+        if (routeInfo is Result.Success) {
+            return (routeInfo as Result.Success<Array<HoldData>>).data
+        } else {
+            println("Error getting route info")
+            return emptyArray()
+        }
+
     }
 }

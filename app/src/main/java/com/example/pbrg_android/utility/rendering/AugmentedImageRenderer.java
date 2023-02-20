@@ -18,6 +18,7 @@ package com.example.pbrg_android.utility.rendering;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.pbrg_android.data.model.HoldData;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.AugmentedImage;
 import com.google.ar.core.Pose;
@@ -46,26 +47,25 @@ public class AugmentedImageRenderer {
   public AugmentedImageRenderer() {}
 
   public void createOnGlThread(Context context) throws IOException {
-
-    imageFrameUpperLeft.createOnGlThread(
-        context, "models/frame_upper_left.obj", "models/frame_base1.png");
-    imageFrameUpperLeft.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
-    imageFrameUpperLeft.setBlendMode(BlendMode.AlphaBlending);
-
-    imageFrameUpperRight.createOnGlThread(
-        context, "models/frame_upper_right.obj", "models/frame_base1.png");
-    imageFrameUpperRight.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
-    imageFrameUpperRight.setBlendMode(BlendMode.AlphaBlending);
-
-    imageFrameLowerLeft.createOnGlThread(
-        context, "models/frame_lower_left.obj", "models/frame_base1.png");
-    imageFrameLowerLeft.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
-    imageFrameLowerLeft.setBlendMode(BlendMode.AlphaBlending);
-
-    imageFrameLowerRight.createOnGlThread(
-        context, "models/frame_lower_right.obj", "models/frame_base1.png");
-    imageFrameLowerRight.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
-    imageFrameLowerRight.setBlendMode(BlendMode.AlphaBlending);
+//    imageFrameUpperLeft.createOnGlThread(
+//        context, "models/frame_upper_left.obj", "models/frame_base1.png");
+//    imageFrameUpperLeft.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
+//    imageFrameUpperLeft.setBlendMode(BlendMode.AlphaBlending);
+//
+//    imageFrameUpperRight.createOnGlThread(
+//        context, "models/frame_upper_right.obj", "models/frame_base1.png");
+//    imageFrameUpperRight.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
+//    imageFrameUpperRight.setBlendMode(BlendMode.AlphaBlending);
+//
+//    imageFrameLowerLeft.createOnGlThread(
+//        context, "models/frame_lower_left.obj", "models/frame_base1.png");
+//    imageFrameLowerLeft.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
+//    imageFrameLowerLeft.setBlendMode(BlendMode.AlphaBlending);
+//
+//    imageFrameLowerRight.createOnGlThread(
+//        context, "models/frame_lower_right.obj", "models/frame_base1.png");
+//    imageFrameLowerRight.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
+//    imageFrameLowerRight.setBlendMode(BlendMode.AlphaBlending);
 
     pyramidRenderer.createOnGlThread(
             context, "models/torus.obj" , "models/solid_purple.png");
@@ -78,68 +78,83 @@ public class AugmentedImageRenderer {
       float[] projectionMatrix,
       AugmentedImage augmentedImage,
       Anchor centerAnchor,
-      float[] colorCorrectionRgba) {
+      float[] colorCorrectionRgba,
+      HoldData[] holdDataArray) {
     float[] tintColor =
         convertHexToColor(TINT_COLORS_HEX[augmentedImage.getIndex() % TINT_COLORS_HEX.length]);
 
-    final float mazeEdgeSize = 20.0f; // Magic number of pyramid size
+    final float mazeEdgeSize = 20.0f; // Magic number of torus size
     final float maxImageEdgeSize = Math.max(augmentedImage.getExtentX(), augmentedImage.getExtentZ()); // Get largest detected image edge size
-
-
     float mazeScaleFactor = maxImageEdgeSize / mazeEdgeSize; // scale to set Maze to image size
     Log.e("Maze scale factor", "" + mazeScaleFactor);
     float[] modelMatrix = new float[16];
 
-    Pose[] localBoundaryPoses = {
-      Pose.makeTranslation(
-          -0.5f * augmentedImage.getExtentX(),
-          0.0f,
-          -0.5f * augmentedImage.getExtentZ()), // upper left
-      Pose.makeTranslation(
-          0.5f * augmentedImage.getExtentX(),
-          0.0f,
-          -0.5f * augmentedImage.getExtentZ()), // upper right
-      Pose.makeTranslation(
-          0.5f * augmentedImage.getExtentX(),
-          0.0f,
-          0.5f * augmentedImage.getExtentZ()), // lower right
-      Pose.makeTranslation(
-          -0.5f * augmentedImage.getExtentX(),
-          0.0f,
-          0.5f * augmentedImage.getExtentZ()) // lower left
-    };
-
     Pose anchorPose = centerAnchor.getPose();
-    Pose[] worldBoundaryPoses = new Pose[4];
-    for (int i = 0; i < 4; ++i) {
-      worldBoundaryPoses[i] = anchorPose.compose(localBoundaryPoses[i]);
+//    Pose[] localBoundaryPoses = {
+//      Pose.makeTranslation(
+//          -0.5f * augmentedImage.getExtentX(),
+//          0.0f,
+//          -0.5f * augmentedImage.getExtentZ()), // upper left
+//      Pose.makeTranslation(
+//          0.5f * augmentedImage.getExtentX(),
+//          0.0f,
+//          -0.5f * augmentedImage.getExtentZ()), // upper right
+//      Pose.makeTranslation(
+//          0.5f * augmentedImage.getExtentX(),
+//          0.0f,
+//          0.5f * augmentedImage.getExtentZ()), // lower right
+//      Pose.makeTranslation(
+//          -0.5f * augmentedImage.getExtentX(),
+//          0.0f,
+//          0.5f * augmentedImage.getExtentZ()) // lower left
+//    };
+//
+//    Pose[] worldBoundaryPoses = new Pose[4];
+//    for (int i = 0; i < 4; ++i) {
+//      worldBoundaryPoses[i] = anchorPose.compose(localBoundaryPoses[i]);
+//    }
+//
+//    float scaleFactor = 1.0f;
+//
+//    worldBoundaryPoses[0].toMatrix(modelMatrix, 0);
+//    imageFrameUpperLeft.updateModelMatrix(modelMatrix, scaleFactor);
+//    imageFrameUpperLeft.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
+//
+//    worldBoundaryPoses[1].toMatrix(modelMatrix, 0);
+//    imageFrameUpperRight.updateModelMatrix(modelMatrix, scaleFactor);
+//    imageFrameUpperRight.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
+//
+//    worldBoundaryPoses[2].toMatrix(modelMatrix, 0);
+//    imageFrameLowerRight.updateModelMatrix(modelMatrix, scaleFactor);
+//    imageFrameLowerRight.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
+//
+//    worldBoundaryPoses[3].toMatrix(modelMatrix, 0);
+//    imageFrameLowerLeft.updateModelMatrix(modelMatrix, scaleFactor);
+//    imageFrameLowerLeft.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
+    // Render centre
+    Pose mazeModelLocalOffset = Pose.makeTranslation(0.0f,0.0f,0.0f);
+    anchorPose.compose(mazeModelLocalOffset).toMatrix(modelMatrix, 0);
+    pyramidRenderer.updateModelMatrix(modelMatrix, mazeScaleFactor);
+    pyramidRenderer.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
+    // Render route
+    for (int i = 0; i < holdDataArray.length; i++) {
+      Float x = holdDataArray[i].getX();
+      Float y = holdDataArray[i].getY();
+
+      mazeModelLocalOffset = Pose.makeTranslation(
+              (x-0.5f) * augmentedImage.getExtentX(),
+              0.0f,
+              (y-0.5f) * augmentedImage.getExtentZ());
+
+      anchorPose.compose(mazeModelLocalOffset).toMatrix(modelMatrix, 0);
+      pyramidRenderer.updateModelMatrix(modelMatrix, mazeScaleFactor); // This line relies on a change in ObjectRenderer.updateModelMatrix later in this codelab.
+      pyramidRenderer.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
+
     }
 
-    float scaleFactor = 1.0f;
 
-    worldBoundaryPoses[0].toMatrix(modelMatrix, 0);
-    imageFrameUpperLeft.updateModelMatrix(modelMatrix, scaleFactor);
-    imageFrameUpperLeft.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
 
-    worldBoundaryPoses[1].toMatrix(modelMatrix, 0);
-    imageFrameUpperRight.updateModelMatrix(modelMatrix, scaleFactor);
-    imageFrameUpperRight.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
 
-    worldBoundaryPoses[2].toMatrix(modelMatrix, 0);
-    imageFrameLowerRight.updateModelMatrix(modelMatrix, scaleFactor);
-    imageFrameLowerRight.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
-
-    worldBoundaryPoses[3].toMatrix(modelMatrix, 0);
-    imageFrameLowerLeft.updateModelMatrix(modelMatrix, scaleFactor);
-    imageFrameLowerLeft.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
-
-    Pose mazeModelLocalOffset = Pose.makeTranslation(
-            0.0f * mazeScaleFactor,
-            0.0f,
-            0.0f * mazeScaleFactor);
-    anchorPose.compose(mazeModelLocalOffset).toMatrix(modelMatrix, 0);
-    pyramidRenderer.updateModelMatrix(modelMatrix, mazeScaleFactor); // This line relies on a change in ObjectRenderer.updateModelMatrix later in this codelab.
-    pyramidRenderer.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
   }
 // Adjust size of detected image and render it on-screen
 
