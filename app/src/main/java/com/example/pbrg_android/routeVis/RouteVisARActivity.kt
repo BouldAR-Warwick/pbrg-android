@@ -36,6 +36,7 @@ import com.google.ar.core.ArCoreApk.InstallStatus
 import com.google.ar.core.exceptions.*
 import java.io.IOException
 import com.example.pbrg_android.R
+import com.tencent.mmkv.MMKV
 import java.io.InputStream
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -387,8 +388,12 @@ class RouteVisARActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
     private fun loadAugmentedImageBitmap(): Bitmap? {
         try {
-            val imageStream: InputStream = this.resources.openRawResource(R.raw.uni_board)
-            val bitmap = BitmapFactory.decodeStream(imageStream)
+            var kv: MMKV = MMKV.defaultMMKV()
+            val byteArray : ByteArray? =  kv.decodeBytes("wallImage")
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray!!.size)
+
+//            val imageStream: InputStream = this.resources.openRawResource(R.raw.uni_board)
+//            val bitmap = BitmapFactory.decodeStream(imageStream)
             return bitmap
 //            assets.open("earth.jpg").use { `is` -> return BitmapFactory.decodeStream(`is`) }
         } catch (e: IOException) {

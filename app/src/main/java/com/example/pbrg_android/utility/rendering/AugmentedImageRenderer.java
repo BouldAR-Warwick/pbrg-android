@@ -68,7 +68,7 @@ public class AugmentedImageRenderer {
     imageFrameLowerRight.setBlendMode(BlendMode.AlphaBlending);
 
     pyramidRenderer.createOnGlThread(
-            context, "models/pyramid80.obj" , "models/frame_base1.png");
+            context, "models/torus.obj" , "models/solid_purple.png");
     pyramidRenderer.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
     pyramidRenderer.setBlendMode(BlendMode.AlphaBlending);
   }
@@ -82,7 +82,7 @@ public class AugmentedImageRenderer {
     float[] tintColor =
         convertHexToColor(TINT_COLORS_HEX[augmentedImage.getIndex() % TINT_COLORS_HEX.length]);
 
-    final float mazeEdgeSize = 800.0f; // Magic number of pyramid size
+    final float mazeEdgeSize = 20.0f; // Magic number of pyramid size
     final float maxImageEdgeSize = Math.max(augmentedImage.getExtentX(), augmentedImage.getExtentZ()); // Get largest detected image edge size
 
 

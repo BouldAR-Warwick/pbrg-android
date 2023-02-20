@@ -31,7 +31,10 @@
             android:padding="16dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:src="@drawable/logo_white" />
+            android:src="@drawable/logo_white"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            />
 
         <ImageView
             android:id="@+id/setting"

@@ -223,7 +223,14 @@ class LoginActivityTest {
         onView(withId(R.id.routeList)).check(matches(isClickable()))
 
         // Route List
-        onData(`is`())
+        onData(anything()).inAdapterView(withId(R.id.routeList))
+            .atPosition(0)
+            .onChildView(withId(R.id.routeItemName))
+            .check(matches(withText("Route #1")))
+        onData(anything()).inAdapterView(withId(R.id.routeList))
+            .atPosition(0)
+            .onChildView(withId(R.id.routeItemDifficulty))
+            .check(matches(withText("V5")))
 
         activityScenario.close()
     }

@@ -1,5 +1,6 @@
 package com.example.pbrg_android.routeGen
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -7,11 +8,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.Spinner
+import com.example.pbrg_android.utility.Result
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
 import com.example.pbrg_android.databinding.ActivityRouteGenBinding
+import com.example.pbrg_android.routeVis.RouteVisARActivity
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RouteGenActivity : AppCompatActivity() {
@@ -42,6 +49,7 @@ class RouteGenActivity : AppCompatActivity() {
         var difficulty = -1
         val spinner: Spinner = binding.selectDifficulty
         val generate = binding.generate
+        val viewInAR = binding.viewInAr
         val selectedGymName = binding.selectedGymName
         var routeImage = binding.routeImage
         selectedGymName.text = intent.getStringExtra("selectedGym")
@@ -70,12 +78,37 @@ class RouteGenActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 difficulty = position-1
                 generate.isEnabled = position != 0
+
             }
 
         }
 
         generate.setOnClickListener {
             //TODO: generate route
+
+            // Get selected difficulty
+            GlobalScope.launch(Dispatchers.IO) {
+                val result : Result<Bitmap> = routeGenViewModel.generateRoute(difficulty)
+                if (result is Result.Success) {
+                    // Update route image
+                    runOnUiThread {
+                        val imageView = findViewById<ImageView>(R.id.routeImage)
+                        imageView.setImageBitmap(result.data)
+                    }
+                    // Enable "View route in AR" button
+                    viewInAR.isEnabled = true
+
+                } else {
+                    println("Error generating and updating route")
+                }
+            }
         }
+
+        viewInAR.setOnClickListener {
+            val intent = Intent(this, RouteVisARActivity::class.java).apply{
+            }
+            startActivity(intent)
+        }
+
     }
 }
