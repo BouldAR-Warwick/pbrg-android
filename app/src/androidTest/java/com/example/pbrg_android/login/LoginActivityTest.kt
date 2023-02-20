@@ -28,7 +28,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.intent.rule.IntentsRule
 import com.example.pbrg_android.R
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.example.pbrg_android.utility.EspressoDrawableMatchers.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.Matchers.*
@@ -136,7 +135,7 @@ class LoginActivityTest {
         // Make sure the activity is closed
         activityScenario.close()
     }
-    
+
     fun drawableIsChanged(@DrawableRes drawableResId: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
             override fun describeTo(description: Description) {
