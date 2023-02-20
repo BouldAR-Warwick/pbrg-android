@@ -140,7 +140,7 @@ class RouteDataSource @Inject constructor(private val context: Context) {
 
                     var holdList: Array<HoldData> = Array(jsonArray.length()) {
                         val routeInfo = jsonArray.getJSONObject(it)
-                        HoldData(routeInfo.getInt("x"), routeInfo.getInt("y"))
+                        HoldData(routeInfo.getDouble("x") as Float, routeInfo.getDouble("y") as Float)
                     }
 
                     Result.Success(holdList)

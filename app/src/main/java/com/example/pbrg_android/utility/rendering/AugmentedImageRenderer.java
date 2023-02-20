@@ -137,9 +137,15 @@ public class AugmentedImageRenderer {
     pyramidRenderer.updateModelMatrix(modelMatrix, mazeScaleFactor);
     pyramidRenderer.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
     // Render route
-    for (int i = 0; i < holdDataArray.length; i++) {
-      Float x = holdDataArray[i].getX();
-      Float y = holdDataArray[i].getY();
+    HoldData[] fakeholdDataArray = {new HoldData(0.1f, 0.1f)
+            , new HoldData(0.2f, 0.2f)
+            , new HoldData(0.5f, 0.5f)
+            , new HoldData(0.1f, 0.7f)
+            , new HoldData(0.8f, 0.9f)
+    };
+    for (int i = 0; i < fakeholdDataArray.length; i++) {
+      Float x = fakeholdDataArray[i].getX();
+      Float y = fakeholdDataArray[i].getY();
 
       mazeModelLocalOffset = Pose.makeTranslation(
               (x-0.5f) * augmentedImage.getExtentX(),
