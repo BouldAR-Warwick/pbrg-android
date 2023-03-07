@@ -304,7 +304,10 @@ class RouteVisARActivity : AppCompatActivity(), GLSurfaceView.Renderer {
 
     private fun configureSession() {
         val config = Config(session)
-        config.setFocusMode(Config.FocusMode.AUTO)
+        config.focusMode = Config.FocusMode.AUTO
+        config.depthMode = Config.DepthMode.DISABLED
+        config.planeFindingMode = Config.PlaneFindingMode.VERTICAL
+
         if (!setupAugmentedImageDatabase(config)) {
             messageSnackbarHelper.showError(this, "Could not setup augmented image database")
         }
