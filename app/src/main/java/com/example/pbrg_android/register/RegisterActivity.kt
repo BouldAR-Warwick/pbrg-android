@@ -212,22 +212,29 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Navigate to Main page
+     * */
     private fun updateUiWithUser(loggedInUser: LoggedInUser) {
         // Initiate successful logged in experience
         val displayName = loggedInUser.displayName
-        // display welcome popup
-//        val welcome = getString(R.string.welcome)
-//        Toast.makeText(
-//            applicationContext,
-//            "$welcome $displayName",
-//            Toast.LENGTH_LONG
-//        ).show()
+        // Display welcome popup
+        val welcome = getString(R.string.welcome)
+        Toast.makeText(
+            applicationContext,
+            "$welcome $displayName",
+            Toast.LENGTH_LONG
+        ).show()
+        // Navigate to Main page
         val intent = Intent(this, MainActivity::class.java).apply{
             putExtra(EXTRA_MESSAGE, displayName)
         }
         startActivity(intent)
     }
 
+    /**
+     * Prompt register failed
+     */
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }

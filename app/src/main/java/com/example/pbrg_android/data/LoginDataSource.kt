@@ -48,17 +48,17 @@ class LoginDataSource @Inject constructor(private val context: Context) {
 
                 requestQueue.add(jsonObjRequest)
                 // Process fetched data
-                try {
+                result = try {
                     val response : JSONObject = future.get()
                     val sessionId = ConnectViaSession(context).getSession()
                     val existingUser = LoggedInUser(
                         sessionId!!,
                         response.getInt("uid"),
                         response.getString("username"))
-                    result = Result.Success(existingUser)
+                    Result.Success(existingUser)
                 } catch (e: Throwable) {
                     println(e.message)
-                    result = Result.Error(IOException("Error logging in", e))
+                    Result.Error(IOException("Error logging in", e))
                 }
 
             } catch (e: Throwable) {

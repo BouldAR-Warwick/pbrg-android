@@ -19,16 +19,16 @@ import java.io.IOException
 import javax.inject.Inject
 
 class RouteDataSource @Inject constructor(private val context: Context) {
-
-    suspend fun getRoute(routeID: Int): Result<Int> {
+    /**
+     * Fetch route via HTTP POST request
+     * */
+    suspend fun getRoute(baseUrl : String, routeID: Int): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int>
-            result = Result.Success(0)
 
-            // POST get route request
             try {
                 val data = JSONObject("""{"routeID":$routeID}""")
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetRoute"
+                val url = "$baseUrl/GetRoute"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -51,28 +51,28 @@ class RouteDataSource @Inject constructor(private val context: Context) {
 //                    val response: JSONObject = future.get()
                     Result.Success(1)
                 } catch (e: Throwable) {
-                    println("eeeeeeeeeeeerror $e")
-                    Result.Error(IOException("Error getting selected gym", e))
+                    Result.Error(IOException("Error fetching selected gym", e))
                 }
 
             } catch (e: Throwable) {
-                result = Result.Error(IOException("Error getting selected gym", e))
+                result = Result.Error(IOException("Error fetching selected gym", e))
             }
 
             result
         }
     }
 
-    suspend fun getRouteImage(routeID: Int): Result<Bitmap> {
+    /**
+     * Fetch route image via HTTP POST request
+     * */
+    suspend fun getRouteImage(baseUrl : String, routeID: Int): Result<Bitmap> {
 
         return withContext(Dispatchers.IO) {
             var result: Result<Bitmap>
-            result = Result.Error(IOException("Error loading image"))
 
-            // POST route image request
             try {
                 val data = JSONObject("""{"routeID":$routeID}""")
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetRouteImage"
+                val url = "$baseUrl/GetRouteImage"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<Bitmap> = RequestFuture.newFuture()
@@ -95,27 +95,28 @@ class RouteDataSource @Inject constructor(private val context: Context) {
                     val response: Bitmap = future.get()
                     Result.Success(response)
                 } catch (e: Throwable) {
-                    Result.Error(IOException("Error getting image", e))
+                    Result.Error(IOException("Error fetching image", e))
                 }
 
             } catch (e: Throwable) {
-                result = Result.Error(IOException("Error getting routes", e))
+                result = Result.Error(IOException("Error fetching routes", e))
             }
 
             result
         }
     }
 
-    suspend fun getRouteInfo(routeID: Int): Result<Array<HoldData>> {
+    /**
+     * Fetch route info via HTTP POST request
+     * */
+    suspend fun getRouteInfo(baseUrl : String, routeID: Int): Result<Array<HoldData>> {
 
         return withContext(Dispatchers.IO) {
             var result: Result<Array<HoldData>>
-            result = Result.Error(IOException("Error loading image"))
 
-            // POST route info request
             try {
                 val data = JSONObject("""{"routeID":$routeID}""")
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetRouteInfo"
+                val url = "$baseUrl/GetRouteInfo"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -146,26 +147,24 @@ class RouteDataSource @Inject constructor(private val context: Context) {
                     Result.Success(holdList)
 
                 } catch (e: Throwable) {
-                    Result.Error(IOException("Error getting route info", e))
+                    Result.Error(IOException("Error fetching route info", e))
                 }
 
             } catch (e: Throwable) {
-                result = Result.Error(IOException("Error getting route info", e))
+                result = Result.Error(IOException("Error fetching route info", e))
             }
 
             result
         }
     }
 
-    suspend fun deleteRoute(): Result<Int> {
+    suspend fun deleteRoute(baseUrl : String): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int>
-            result = Result.Error(IOException("Error deleting route"))
 
-            // POST delete route request
             try {
                 val data = JSONObject("""{}""")
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/DeleteRoute"
+                val url = "$baseUrl/DeleteRoute"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -188,11 +187,11 @@ class RouteDataSource @Inject constructor(private val context: Context) {
                     val response: JSONObject = future.get()
                     Result.Success(1)
                 } catch (e: Throwable) {
-                    Result.Error(IOException("Error getting selected gym", e))
+                    Result.Error(IOException("Error fetching selected gym", e))
                 }
 
             } catch (e: Throwable) {
-                result = Result.Error(IOException("Error getting selected gym", e))
+                result = Result.Error(IOException("Error fetching selected gym", e))
             }
 
             result

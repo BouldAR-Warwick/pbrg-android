@@ -10,11 +10,12 @@ import javax.inject.Inject
 
 
 class WallViewModel @Inject constructor(private val wallDataSource: WallDataSource) : ViewModel() {
+    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
 
     suspend fun getWall(): Result<Array<RouteListItem>> {
 
         return withContext(Dispatchers.IO) {
-            val result = wallDataSource.routeSearch()
+            val result = wallDataSource.routeSearch(baseUrl)
             result
         }
     }

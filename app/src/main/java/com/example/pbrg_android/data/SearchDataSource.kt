@@ -14,17 +14,16 @@ import android.content.Context
 import javax.inject.Inject
 
 class SearchDataSource @Inject constructor(private val context: Context) {
-    // Perform gym search
-    suspend fun gymSearch(query: String?): Result<Array<String>> {
+    /**
+     * Perform gym search via HTTP POST request
+     * */
+    suspend fun gymSearch(baseUrl : String, query: String?): Result<Array<String>> {
         return withContext(Dispatchers.IO) {
             var result: Result<Array<String>>
-            var fakeGymList: Array<String> = arrayOf()
-            result = Result.Success(fakeGymList)
-            // POST search request
+
             try {
                 val data = JSONObject("""{"queryword":"$query"}""")
-//                val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/SearchGym"
+                val url = "$baseUrl/SearchGym"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -43,17 +42,16 @@ class SearchDataSource @Inject constructor(private val context: Context) {
                 }
                 requestQueue.add(jsonObjRequest)
 
-                try {
+                result = try {
                     // Extract search result as a list of gyms
                     val response: JSONObject = future.get()
                     val jsonArray: JSONArray = response.getJSONArray("gyms")
                     val gymList = Array(jsonArray.length()) {
                         jsonArray.getString(it)
                     }
-                    result = Result.Success(gymList)
+                    Result.Success(gymList)
                 } catch (e: Throwable) {
-                    println("error $e")
-                    result = Result.Error(IOException("Error searching gym", e))
+                    Result.Error(IOException("Error searching gym", e))
                 }
 
             } catch (e: Throwable) {

@@ -6,10 +6,7 @@ import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Spinner
+import android.widget.*
 import com.example.pbrg_android.utility.Result
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
@@ -78,11 +75,11 @@ class RouteGenActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 difficulty = position-1
                 generate.isEnabled = position != 0
-
             }
 
         }
 
+        // Generate route
         generate.setOnClickListener {
             //TODO: generate route
 
@@ -99,11 +96,14 @@ class RouteGenActivity : AppCompatActivity() {
                     viewInAR.isEnabled = true
 
                 } else {
-                    println("Error generating and updating route")
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Error generating and updating route", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
 
+        // Navigate to View in AR page
         viewInAR.setOnClickListener {
             val intent = Intent(this, RouteVisARActivity::class.java).apply{
             }

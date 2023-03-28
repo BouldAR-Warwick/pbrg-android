@@ -61,20 +61,15 @@ class WallActivity : AppCompatActivity() {
                     routeList!!.adapter = adapter
                 }
             } else {
-
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Error fetching wall", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
 
-
-
         // ListView item click event
         routeList!!.setOnItemClickListener { _, _, i, l ->
-//            Toast.makeText(
-//                this@WallActivity,
-//                "item clicked i = " + i + "l = " + l,
-//                Toast.LENGTH_SHORT
-//            ).show()
 
             val intent = Intent(this, RouteActivity::class.java).apply{
                 val route: RouteListItem = adapter.getItem(i)
@@ -94,10 +89,6 @@ class WallActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
-    }
-
-    fun getWall() {
-
     }
 
 }

@@ -19,17 +19,16 @@ import java.io.IOException
 import javax.inject.Inject
 
 class WallDataSource @Inject constructor(private val context: Context) {
-
-    suspend fun routeSearch(): Result<Array<RouteListItem>> {
+    /**
+     * Perform route search via HTTP POST request
+     * */
+    suspend fun routeSearch(baseUrl : String): Result<Array<RouteListItem>> {
         return withContext(Dispatchers.IO) {
             var result: Result<Array<RouteListItem>>
-            var fakeRoutes: Array<RouteListItem> = arrayOf()
-            result = Result.Success(fakeRoutes)
 
-            // POST search request
             try {
                 val data = JSONObject() // empty data
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetRoutes"
+                val url = "$baseUrl/GetRoutes"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -67,7 +66,6 @@ class WallDataSource @Inject constructor(private val context: Context) {
 
                     Result.Success(routeList)
                 } catch (e: Throwable) {
-                    println("error $e")
                     Result.Error(IOException("Error getting routes", e))
                 }
 

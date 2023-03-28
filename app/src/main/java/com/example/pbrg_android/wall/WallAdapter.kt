@@ -12,6 +12,9 @@ import android.widget.Toast
 import com.example.pbrg_android.R
 import com.example.pbrg_android.data.model.RouteListItem
 
+/**
+ * Adapter that convert list items to ListView items
+ * */
 class WallAdapter(private val data: List<RouteListItem>?) : BaseAdapter(),
     View.OnClickListener {
 
@@ -52,9 +55,11 @@ class WallAdapter(private val data: List<RouteListItem>?) : BaseAdapter(),
     }
 
     override fun onClick(view: View) {
-
     }
 
+    /**
+     * Data class that captures ListView item
+     * */
     internal class ViewHolder {
         var routeItemName: TextView? = null
         var routeItemDifficulty: TextView? = null

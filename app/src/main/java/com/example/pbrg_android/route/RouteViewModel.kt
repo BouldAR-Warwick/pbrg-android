@@ -13,10 +13,11 @@ import java.io.IOException
 import javax.inject.Inject
 
 class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataSource) : ViewModel(){
+    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
 
     suspend fun getRoute(routeID: Int): Result<Int> {
         return withContext(Dispatchers.IO) {
-            var result: Result<Int> = routeDataSource.getRoute(routeID)
+            var result: Result<Int> = routeDataSource.getRoute(baseUrl, routeID)
             result
         }
     }
@@ -24,7 +25,7 @@ class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataS
     suspend fun getRouteImage(routeID: Int): Result<Bitmap> {
         var result: Result<Bitmap>
         return withContext(Dispatchers.IO) {
-            result = routeDataSource.getRouteImage(routeID)
+            result = routeDataSource.getRouteImage(baseUrl, routeID)
             result
         }
     }
@@ -32,7 +33,7 @@ class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataS
     suspend fun getRouteInfo(routeID: Int): Result<Array<HoldData>> {
         var result: Result<Array<HoldData>>
         return withContext(Dispatchers.IO) {
-            result = routeDataSource.getRouteInfo(routeID)
+            result = routeDataSource.getRouteInfo(baseUrl, routeID)
             result
         }
     }
@@ -40,7 +41,7 @@ class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataS
     fun deleteRoute(): Result<Int> {
         var result: Result<Int> = Result.Error(IOException("Error deleting route"))
         GlobalScope.launch(Dispatchers.IO) {
-            result = routeDataSource.deleteRoute()
+            result = routeDataSource.deleteRoute(baseUrl)
         }
         return result
     }

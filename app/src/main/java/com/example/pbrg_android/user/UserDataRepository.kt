@@ -14,13 +14,4 @@ class UserDataRepository @Inject constructor(private val userManager: UserManage
     val username: String
         get() = userManager.user!!.displayName
 
-    var selectedGym: String = ""
-
-    init {
-//        selectedGym = datasource.getPrimaryGym()
-    }
-
-    fun changeSelectedGym() {
-
-    }
 }

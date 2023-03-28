@@ -31,7 +31,7 @@ class SearchActivity: AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         // Load SearchView
-        val mSearchView: SearchView = findViewById<SearchView>(R.id.searchView)
+        val mSearchView: SearchView = findViewById(R.id.searchView)
         mSearchView.isIconified = false
         mSearchView.isSubmitButtonEnabled = true
 
@@ -44,7 +44,9 @@ class SearchActivity: AppCompatActivity() {
                     if (searchResult is Result.Success) {
                         updateSearchResult((searchResult as Result.Success<Array<String>>).data)
                     } else {
-                        println("error >?>>>>>>>>>>>>")
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Error fetching search results", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
                 return false
@@ -59,7 +61,9 @@ class SearchActivity: AppCompatActivity() {
 
     }
 
-    // Update search result, populate list view
+    /**
+     * Update search result, populate list view
+     * */
     private fun updateSearchResult(gymList: Array<String>) {
         runOnUiThread(Runnable {
             val listView = findViewById<View>(R.id.search_result_listview) as ListView
@@ -79,7 +83,9 @@ class SearchActivity: AppCompatActivity() {
         })
     }
 
-    // return to main activity with the selected gym
+    /**
+     * Return to main activity with the selected gym
+     * */
     private fun returnWithSelectedGym(selectedGym: String) {
         intent.putExtra("selectedGym", selectedGym)
         setResult(RESULT_OK, intent)

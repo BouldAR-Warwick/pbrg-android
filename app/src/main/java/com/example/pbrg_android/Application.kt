@@ -28,7 +28,6 @@ class Application : Application() {
         @SuppressLint("StaticFieldLeak")
 
         lateinit var login_info: LoginInfo
-
     }
 
     //override onCreate function to read login info on every activity

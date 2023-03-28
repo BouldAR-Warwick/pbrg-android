@@ -3,7 +3,7 @@ package com.example.pbrg_android.data.model
 import com.google.gson.annotations.SerializedName
 
 /**
- * Data class that captures user information entred
+ * Data class that captures user information entered
  */
 data class RegisterData (
     @SerializedName("username") val username: String,

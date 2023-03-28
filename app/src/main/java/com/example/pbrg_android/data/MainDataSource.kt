@@ -16,16 +16,15 @@ import java.io.IOException
 import javax.inject.Inject
 
 class MainDataSource @Inject constructor(private val context: Context) {
-
-    suspend fun getImage(): Result<Bitmap> {
+    /**
+     * Fetch wall image via HTTP request
+     * */
+    suspend fun getImage(baseUrl: String): Result<Bitmap> {
         return withContext(Dispatchers.IO) {
             var result: Result<Bitmap>
-            result = Result.Error(IOException("Error loading image"))
-
-            // POST get wall image request
             try {
                 val data = JSONObject("""{}""") // empty data
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetWallImage"
+                val url = "$baseUrl/GetWallImage"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<Bitmap> = RequestFuture.newFuture()
@@ -48,26 +47,26 @@ class MainDataSource @Inject constructor(private val context: Context) {
                     val response: Bitmap = future.get()
                     Result.Success(response)
                 } catch (e: Throwable) {
-                    Result.Error(IOException("Error getting image", e))
+                    Result.Error(IOException("Error fetching image", e))
                 }
 
             } catch (e: Throwable) {
-                result = Result.Error(IOException("Error getting image", e))
+                result = Result.Error(IOException("Error fetching image", e))
             }
 
             result
         }
     }
-
-    suspend fun getGym(selectedGym: String): Result<Int> {
+    /**
+     * Fetch wall image of selected gym via HTTP request
+     * */
+    suspend fun getGym(baseUrl: String, selectedGym: String): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int>
-            result = Result.Success(0)
 
-            // POST get gym request
             try {
                 val data = JSONObject("""{"gymname":"$selectedGym"}""")
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetGym"
+                val url = "$baseUrl/GetGym"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -90,28 +89,26 @@ class MainDataSource @Inject constructor(private val context: Context) {
                     val response: JSONObject = future.get()
                     Result.Success(response.getInt("gid"))
                 } catch (e: Throwable) {
-                    println("11111111111111111error $e")
                     Result.Error(IOException("Error getting selected gym", e))
                 }
 
             } catch (e: Throwable) {
-                println("-------------------error $e")
                 result = Result.Error(IOException("Error getting selected gym", e))
             }
 
             result
         }
     }
-
-    suspend fun getPrimaryGym(): Result<String> {
+    /**
+     * Fetch wall image of primary gym via HTTP request
+     * */
+    suspend fun getPrimaryGym(baseUrl: String): Result<String> {
         return withContext(Dispatchers.IO) {
             var result: Result<String>
-            result = Result.Success("")
 
-            // POST get gym request
             try {
                 val data = JSONObject("""{}""")
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/GetPrimaryGym"
+                val url = "$baseUrl/GetPrimaryGym"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -135,12 +132,10 @@ class MainDataSource @Inject constructor(private val context: Context) {
                     println(response.toString())
                     Result.Success(response.getString("gymName"))
                 } catch (e: Throwable) {
-                    println("11111111111111111error $e")
                     Result.Error(IOException("Error getting selected gym", e))
                 }
 
             } catch (e: Throwable) {
-                println("-------------------error $e")
                 result = Result.Error(IOException("Error getting selected gym", e))
             }
 

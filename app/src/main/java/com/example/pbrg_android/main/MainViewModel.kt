@@ -17,12 +17,14 @@ import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val mainDataSource: MainDataSource) : ViewModel() {
+    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
+
     /**
      * Fetch primary gym
      * */
     suspend fun getPrimaryGym(): Result<String> {
         return withContext(Dispatchers.IO) {
-            var result: Result<String> = mainDataSource.getPrimaryGym()
+            var result: Result<String> = mainDataSource.getPrimaryGym(baseUrl)
             result
         }
     }
@@ -32,7 +34,7 @@ class MainViewModel @Inject constructor(private val mainDataSource: MainDataSour
      * */
     suspend fun getGym(selectedGym: String): Result<Int> {
         return withContext(Dispatchers.IO) {
-            var result: Result<Int> = mainDataSource.getGym(selectedGym)
+            var result: Result<Int> = mainDataSource.getGym(baseUrl, selectedGym)
             result
         }
     }
@@ -42,7 +44,7 @@ class MainViewModel @Inject constructor(private val mainDataSource: MainDataSour
      * */
     suspend fun getWallImage(): Result<Bitmap> {
         return withContext(Dispatchers.IO) {
-            var result: Result<Bitmap> = mainDataSource.getImage()
+            var result: Result<Bitmap> = mainDataSource.getImage(baseUrl)
             result
         }
     }

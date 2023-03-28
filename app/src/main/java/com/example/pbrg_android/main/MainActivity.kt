@@ -61,7 +61,9 @@ class MainActivity : AppCompatActivity(){
         val displayName = binding.displayName
         if (!userManager.isUserLoggedIn()) {
             // Return to login page if user is not logged in
+            println("==========================================================")
             finish()
+
         } else {
             // Load main page
             setContentView(binding.root)
@@ -134,7 +136,9 @@ class MainActivity : AppCompatActivity(){
                     getGym(selectedGym!!)
                     currentGym = selectedGym!!
                 } else {
-                    Toast.makeText(applicationContext, "Error getting primary gym!", Toast.LENGTH_SHORT).show()
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Error getting primary gym!", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -149,7 +153,9 @@ class MainActivity : AppCompatActivity(){
             var result: Result<Int> = Result.Success(0)
             result = mainViewModel.getGym(selectedGym)
             if (result is Result.Error) {
-                Toast.makeText(applicationContext, "Error fetching selected gym!", Toast.LENGTH_SHORT).show()
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Error fetching selected gym!", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 // Fetch wall image of selected gym
                 var imageResult: Result<Bitmap> = mainViewModel.getWallImage()
@@ -161,7 +167,10 @@ class MainActivity : AppCompatActivity(){
                         imageView.setImageBitmap(imageResult.data)
                     }
                 } else {
-                    Toast.makeText(applicationContext, "Error displaying image!", Toast.LENGTH_SHORT).show()
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Error displaying image!", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }
         }

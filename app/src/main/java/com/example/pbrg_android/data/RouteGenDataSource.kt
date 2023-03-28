@@ -14,17 +14,18 @@ import org.json.JSONObject
 import java.io.IOException
 import javax.inject.Inject
 
-class RouteGenDataSource  @Inject constructor(private val context: Context) {
-    suspend fun generateRoute(difficulty : Int) : Result<Bitmap> {
+class RouteGenDataSource @Inject constructor(private val context: Context) {
+
+    /**
+     * Generate route via HTTP POST request
+     * */
+    suspend fun generateRoute(baseUrl : String, difficulty : Int) : Result<Bitmap> {
         return withContext(Dispatchers.IO) {
             var result: Result<Bitmap>
-            result = Result.Error(IOException("Error generating route"))
 
-            // POST route generation request
             try {
                 val data = JSONObject("""{"difficulty":$difficulty}""")
-                val url =
-                    "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/generateRoute"
+                val url = "$baseUrl/generateRoute"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<Bitmap> = RequestFuture.newFuture()

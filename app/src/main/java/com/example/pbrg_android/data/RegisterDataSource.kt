@@ -23,16 +23,16 @@ import javax.inject.Inject
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
 class RegisterDataSource @Inject constructor(private val context: Context) {
-
-    suspend fun register(registerData: RegisterData) : Result<LoggedInUser> {
+    /**
+     * Register via HTTP POST request
+     * */
+    suspend fun register(baseUrl : String, registerData: RegisterData) : Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
             var result: Result<LoggedInUser>
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane Doe")
-            result = Result.Success(fakeUser)
 
             try {
                 val data = JSONObject(Gson().toJson(registerData))
-                val url = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT/Register"
+                val url = "$baseUrl/Register"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
@@ -47,18 +47,16 @@ class RegisterDataSource @Inject constructor(private val context: Context) {
 
                 requestQueue.add(jsonObjRequest)
 
-                try {
-
+                result = try {
                     val response: JSONObject = future.get()
                     val sessionId = ConnectViaSession(context).getSession()
                     val newUser = LoggedInUser(
                         sessionId!!,
                         response.getInt("uid"),
                         response.getString("username"))
-                    result = Result.Success(newUser)
+                    Result.Success(newUser)
                 } catch (e: Throwable) {
-                    println("error $e")
-                    // TODO: handle exception
+                    Result.Error(IOException("Error registering", e))
                 }
 
             } catch (e: Throwable) {
@@ -69,7 +67,4 @@ class RegisterDataSource @Inject constructor(private val context: Context) {
         }
     }
 
-    fun unregister() {
-        // TODO: revoke authentication and unregister
-    }
 }

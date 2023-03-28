@@ -8,20 +8,24 @@ import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import org.json.JSONObject
 
-// Handles http request with session and cookies
+/**
+ * Handles http request with session and cookies
+ */
 class ConnectViaSession(private val context: Context) {
     private var mHeader: MutableList<Header> = mutableListOf()
     private var cookies: MutableMap<String, String> = mutableMapOf()
     private var sesstionID: String? = null
 
-    // Extract session ID from the cookies
+    /**
+     * Extract session ID from the cookies
+     * */
     fun getSession(response: NetworkResponse) {
-        // get header
+        // Get header
         println(response.allHeaders.toString())
         try {
             mHeader = response.allHeaders as MutableList<Header>
             var rawCookies: LoggedInUser
-            // iterate headers to find cookies
+            // Iterate headers to find cookies
             mHeader.forEach {
                 val header: JSONObject  =JSONObject(Gson().toJson(it))
                 if (header["mName"] == "Set-Cookie") {
@@ -32,26 +36,30 @@ class ConnectViaSession(private val context: Context) {
                     cookies.set(key, value)
                 }
             }
-            cookies.forEach{
-                println("${it.key}, ${it.value}")
-            }
+//            cookies.forEach{
+//                println("${it.key}, ${it.value}")
+//            }
+//            println("sessionid is $sesstionID")
             sesstionID = cookies.get("JSESSIONID")
-            println("sessionid is $sesstionID")
-            // save session id using mmkv
+
+            // Save session id to local storage
             saveSession(sesstionID)
         } catch (e: Throwable) {
-            println("ERROR")
             println(e.stackTraceToString())
         }
     }
 
-    // save session id with mmkv
+    /**
+     * Save session id to local storage with mmkv
+     * */
     fun saveSession(sessionID: String?) {
         var kv: MMKV = MMKV.defaultMMKV()
         kv.encode("sessionID", sessionID)
     }
 
-    // get session id from local storage
+    /**
+     * Get session id from local storage
+     * */
     fun getSession(): String? {
         val kv: MMKV = MMKV.defaultMMKV()
         return kv.decodeString("sessionID")

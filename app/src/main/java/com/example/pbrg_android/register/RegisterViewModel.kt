@@ -22,7 +22,12 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
+    // Regular expression for matching email address
+    private val regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}".toRegex()
 
+    /**
+     * Call user manager to register user
+     */
     fun register(username: String, password: String, email: String) {
         viewModelScope.launch(Dispatchers.IO) {
             when(val result = userManager.registerUser(username, password, email)) {
@@ -33,13 +38,15 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
                         displayName = result.data.displayName)
                     ))
                 else ->
-                    // todo: split error type
-                    _loginResult.postValue(LoginResult(error = R.string.login_failed))
+                    _loginResult.postValue(LoginResult(error = R.string.register_failed))
             }
         }
 
     }
 
+    /**
+     * Check the whole form
+     */
     fun checkWholeForm(username: String, password: String, confirmPassword: String, email: String) {
         // check username, password
         val usernameValid = isUserNameValid(username)
@@ -55,6 +62,9 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
         }
     }
 
+    /**
+     * Check when username is changed
+     */
     fun usernameChanged(username: String) {
         // check username
         val usernameValid = isUserNameValid(username)
@@ -63,6 +73,9 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
         }
     }
 
+    /**
+     * Check when password is changed
+     */
     fun passwordChanged(password: String) {
         // check password
         val passwordValid = isPasswordValid(password)
@@ -71,6 +84,9 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
         }
     }
 
+    /**
+     * Check when confirm password is changed
+     */
     fun confirmPasswordChanged(password: String, confirmPassword: String) {
         // check password
         val confirmPasswordValid = isConfirmPasswordValid(password, confirmPassword)
@@ -79,6 +95,9 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
         }
     }
 
+    /**
+     * Check when email is changed
+     */
     fun emailChanged(email: String) {
         // check password
         val emailValid = isEmailValid(email)
@@ -87,20 +106,30 @@ class RegisterViewModel @Inject constructor(private val userManager: UserManager
         }
     }
 
-    private val regex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}".toRegex()
-
+    /**
+     * Check whether email is valid
+     */
     private fun isEmailValid(email: String): Boolean {
         return !email.isEmpty() && regex.matches(email)
     }
 
+    /**
+     * Check whether username is valid
+     */
     private fun isUserNameValid(username: String): Boolean {
         return username.length >= 6
     }
 
+    /**
+     * Check whether password is valid
+     */
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
 
+    /**
+     * Check whether confirm password is valid
+     */
     private fun isConfirmPasswordValid(password: String, confirmPassword: String): Boolean {
         return password == confirmPassword
     }
