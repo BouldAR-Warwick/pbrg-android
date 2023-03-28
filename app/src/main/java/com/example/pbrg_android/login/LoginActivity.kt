@@ -23,6 +23,8 @@ import com.example.pbrg_android.register.RegisterActivity
 import com.example.pbrg_android.utility.LoginInfo
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
+import java.math.BigInteger
+import java.security.MessageDigest
 import javax.inject.Inject
 
 const val EXTRA_MESSAGE = "com.example.pbrg_android.MESSAGE"
@@ -155,7 +157,7 @@ class LoginActivity : AppCompatActivity() {
                 EditorInfo.IME_ACTION_DONE ->
                     loginViewModel.login(
                         username.text.toString(),
-                        password.text.toString(),
+                        hash(password.text.toString()),
                         stayLoggedIn!!.isChecked
                     )
             }
@@ -165,7 +167,7 @@ class LoginActivity : AppCompatActivity() {
         // Login!
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
-            loginViewModel.login(username.text.toString(), password.text.toString(), stayLoggedIn!!.isChecked)
+            loginViewModel.login(username.text.toString(), hash(password.text.toString()), stayLoggedIn!!.isChecked)
         }
     }
 
@@ -211,4 +213,12 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
+}
+
+/**
+ * SHA-256 hash
+ * */
+fun hash(input : String): String {
+    val md = MessageDigest.getInstance("SHA-256")
+    return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
 }

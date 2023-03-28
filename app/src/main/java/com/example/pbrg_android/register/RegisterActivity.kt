@@ -17,6 +17,7 @@ import com.example.pbrg_android.R
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.databinding.ActivityRegisterBinding
 import com.example.pbrg_android.login.EXTRA_MESSAGE
+import com.example.pbrg_android.login.hash
 import com.example.pbrg_android.main.MainActivity
 import javax.inject.Inject
 
@@ -205,7 +206,9 @@ class RegisterActivity : AppCompatActivity() {
         })
 
         register.setOnClickListener {
-            registerViewModel.register(username.text.toString(), password.text.toString(), email.text.toString())
+            registerViewModel.register(username.text.toString(),
+                hash(password.text.toString()),
+                email.text.toString())
         }
     }
 

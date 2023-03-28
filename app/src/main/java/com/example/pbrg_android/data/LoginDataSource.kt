@@ -25,17 +25,16 @@ import javax.inject.Inject
  */
 class LoginDataSource @Inject constructor(private val context: Context) {
 
+    /**
+     * Login via HTTP request
+     * */
     suspend fun login(baseUrl: String, loginData: LoginData) : Result<LoggedInUser> {
         return withContext(Dispatchers.IO) {
             var result: Result<LoggedInUser>
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), 1223, "Jane")
-            result = Result.Success(fakeUser)
             try {
                 val data = JSONObject(Gson().toJson(loginData))
-//                val url = "https://webhook.site/924f4f23-e388-4aa1-882f-d0846425d208"
                 val url = "$baseUrl/Login"
-                println(url)
-
+                // POST request
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
                 val jsonObjRequest: JsonObjectRequest = object : JsonObjectRequest(
@@ -48,6 +47,7 @@ class LoginDataSource @Inject constructor(private val context: Context) {
                 }
 
                 requestQueue.add(jsonObjRequest)
+                // Process fetched data
                 try {
                     val response : JSONObject = future.get()
                     val sessionId = ConnectViaSession(context).getSession()
@@ -66,25 +66,6 @@ class LoginDataSource @Inject constructor(private val context: Context) {
             }
 
             result
-        }
-    }
-
-
-    fun hash(input:String): String {
-        val md = MessageDigest.getInstance("SHA-256")
-        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
-    }
-
-    private fun Any.toMyJson(): String? {
-        return Gson().toJson(this)
-    }
-
-    inline fun <reified T> String.toMyObject(): List<T> {
-        val listType: Type = `$Gson$Types`.newParameterizedTypeWithOwner(null, ArrayList::class.java, T::class.java)
-        return if(!contains("[")){
-            Gson().fromJson("[${this}]", listType)
-        }else{
-            Gson().fromJson(this, listType)
         }
     }
 }

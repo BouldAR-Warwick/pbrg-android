@@ -17,6 +17,9 @@ import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val mainDataSource: MainDataSource) : ViewModel() {
+    /**
+     * Fetch primary gym
+     * */
     suspend fun getPrimaryGym(): Result<String> {
         return withContext(Dispatchers.IO) {
             var result: Result<String> = mainDataSource.getPrimaryGym()
@@ -24,6 +27,9 @@ class MainViewModel @Inject constructor(private val mainDataSource: MainDataSour
         }
     }
 
+    /**
+     * Fetch selected gym
+     * */
     suspend fun getGym(selectedGym: String): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int> = mainDataSource.getGym(selectedGym)
@@ -31,6 +37,9 @@ class MainViewModel @Inject constructor(private val mainDataSource: MainDataSour
         }
     }
 
+    /**
+     * Fetch wall image of current gym
+     * */
     suspend fun getWallImage(): Result<Bitmap> {
         return withContext(Dispatchers.IO) {
             var result: Result<Bitmap> = mainDataSource.getImage()
@@ -38,6 +47,9 @@ class MainViewModel @Inject constructor(private val mainDataSource: MainDataSour
         }
     }
 
+    /**
+     * Store wall image of current gym in local storage
+     * */
     fun storeWallImage(image: Bitmap) {
         val stream = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.PNG, 90, stream)
@@ -45,5 +57,4 @@ class MainViewModel @Inject constructor(private val mainDataSource: MainDataSour
         var kv: MMKV = MMKV.defaultMMKV()
         kv.encode("wallImage", byteArray)
     }
-
 }

@@ -8,6 +8,7 @@ import android.os.Parcel
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -43,11 +44,9 @@ class MainActivity : AppCompatActivity(){
             intent = result.data
             displaySelectedGym()
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         // Ask Dagger to inject our dependencies
         (application as Application).appComponent.injectMain(this)
 
@@ -61,14 +60,15 @@ class MainActivity : AppCompatActivity(){
         val setting = binding.setting
         val displayName = binding.displayName
         if (!userManager.isUserLoggedIn()) {
-            // return to login page if user is not logged in
+            // Return to login page if user is not logged in
+            finish()
         } else {
             // Load main page
             setContentView(binding.root)
             var toolbar: Toolbar = findViewById(R.id.my_toolbar)
             toolbar.title = ""
             setSupportActionBar(findViewById(R.id.my_toolbar))
-            // Display necessary message
+            // Display necessary information on the page
             displayName.text = intent.getStringExtra(EXTRA_MESSAGE)
             displaySelectedGym()
 
@@ -88,12 +88,17 @@ class MainActivity : AppCompatActivity(){
         }
 
     }
-
+    /***
+     * Navigate to Search page
+     */
     override fun onSearchRequested(): Boolean {
         startForResult.launch(Intent(this, SearchActivity::class.java))
         return true
     }
 
+    /***
+     * Navigate to Setting page
+     */
     private fun gotoSetting(username: String) {
         val intent: Intent = Intent(this, SettingActivity::class.java).apply {
             putExtra("username", username)
@@ -101,18 +106,23 @@ class MainActivity : AppCompatActivity(){
         startActivity(intent)
     }
 
-    // Display the primary gym or selected gym from searched result
+    /***
+     * Display the primary gym or selected gym from searched result
+     */
     private fun displaySelectedGym() {
         var selectedGym: String? = intent.getStringExtra("selectedGym")
-        println("selected gym is $selectedGym")
+//        println("selected gym is $selectedGym") // for debugging
 
+        // Display selected gym from search result
         if (selectedGym != null) {
             findViewById<TextView>(R.id.selected_gym).apply {
                 text = selectedGym
             }
             getGym(selectedGym!!)
             currentGym = selectedGym!!
-        } else {
+        }
+        // Display primary gym
+        else {
             // Display primary gym
             GlobalScope.launch(Dispatchers.IO) {
                 var result: Result<String> = mainViewModel.getPrimaryGym()
@@ -124,41 +134,42 @@ class MainActivity : AppCompatActivity(){
                     getGym(selectedGym!!)
                     currentGym = selectedGym!!
                 } else {
-                    println("Error getting primary gym")
+                    Toast.makeText(applicationContext, "Error getting primary gym!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+    /**
+     * Fetch the selected gym info
+     * */
     private fun getGym(selectedGym: String) {
         GlobalScope.launch(Dispatchers.IO) {
-            // get selected gym
+            // Fetch selected gym
             var result: Result<Int> = Result.Success(0)
             result = mainViewModel.getGym(selectedGym)
-            if (result is Result.Success) {
-                println("got selected gym")
+            if (result is Result.Error) {
+                Toast.makeText(applicationContext, "Error fetching selected gym!", Toast.LENGTH_SHORT).show()
             } else {
-                println("Error getting selected gym")
-            }
-
-            // display wall image of the gym
-            var imageResult: Result<Bitmap> = Result.Error(IOException("Error loading image"))
-            imageResult = mainViewModel.getWallImage()
-
-            if (imageResult is Result.Success) {
-                mainViewModel.storeWallImage(imageResult.data)
-                runOnUiThread {
-                    val imageView = findViewById<ImageView>(R.id.wall) as ImageView
-                    imageView.setImageBitmap(imageResult.data)
+                // Fetch wall image of selected gym
+                var imageResult: Result<Bitmap> = mainViewModel.getWallImage()
+                // Display wall image of selected gym
+                if (imageResult is Result.Success) {
+                    mainViewModel.storeWallImage(imageResult.data)
+                    runOnUiThread {
+                        val imageView = findViewById<ImageView>(R.id.wall)
+                        imageView.setImageBitmap(imageResult.data)
+                    }
+                } else {
+                    Toast.makeText(applicationContext, "Error displaying image!", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                println("Error displaying image!")
             }
         }
     }
 
-
-    // Select wall
+    /**
+     * Navigate to Wall page
+     * */
     private fun gotoWall() {
         val intent: Intent = Intent(this, WallActivity::class.java).apply {
             val selectedGym: String? = intent.getStringExtra("selectedGym")
