@@ -33,8 +33,20 @@ class LoginViewModel @Inject constructor(private val userManager: UserManager) :
                     _loginResult.postValue(LoginResult(error = R.string.login_failed))
             }
         }
-
     }
+
+    fun login(loggedInUser: LoggedInUser) {
+        when(val result = userManager.login(loggedInUser)) {
+            is Result.Success ->
+                _loginResult.postValue(LoginResult(success = LoggedInUser(
+                    sessionId = result.data.sessionId,
+                    uid = result.data.uid,
+                    displayName = result.data.displayName)))
+            else ->
+                _loginResult.postValue(LoginResult(error = R.string.login_failed))
+        }
+    }
+
     fun checkLoginStatus() {
 
     }

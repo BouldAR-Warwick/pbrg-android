@@ -19,8 +19,6 @@ class ConnectViaSession(private val context: Context) {
         // get header
         println(response.allHeaders.toString())
         try {
-
-
             mHeader = response.allHeaders as MutableList<Header>
             var rawCookies: LoggedInUser
             // iterate headers to find cookies

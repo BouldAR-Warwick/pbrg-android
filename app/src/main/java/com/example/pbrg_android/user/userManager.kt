@@ -1,6 +1,5 @@
 package com.example.pbrg_android.user
 
-import android.widget.Toast
 import com.example.pbrg_android.data.LoginDataSource
 import com.example.pbrg_android.data.RegisterDataSource
 import com.example.pbrg_android.utility.Result
@@ -63,9 +62,13 @@ class UserManager @Inject constructor(
                 setLoggedInUser(result.data)
                 userJustLoggedIn()
             }
-
             result
         }
+    }
+    fun login(loggedInUser: LoggedInUser): Result<LoggedInUser> {
+        setLoggedInUser(loggedInUser)
+        userJustLoggedIn()
+        return Result.Success(loggedInUser)
     }
 
     fun logout() {

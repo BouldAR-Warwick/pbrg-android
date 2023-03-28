@@ -10,27 +10,16 @@ import com.google.gson.Gson
 import com.google.gson.internal.`$Gson$Types`
 import com.tencent.mmkv.MMKV
 import java.lang.reflect.Type
-
+import android.os.Handler
+import android.os.Looper
+import com.example.pbrg_android.login.EXTRA_MESSAGE
+import com.example.pbrg_android.main.MainActivity
 
 abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (MMKV.defaultMMKV().containsKey("login_info")){
-            // have login info cached
-             Application.login_info = MMKV.defaultMMKV().decodeString("login_info")!!.toMyObject<LoginInfo>()[0]
-            // continue to destination
-        } else {
-            // otherwise initialise login_info
-            Application.login_info = LoginInfo()
-            // Load log in page
-            setContentView(R.layout.activity_login)
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.addCategory("login")
-            startActivity(intent)
-            finish()
-        }
+        setContentView(R.layout.activity_boot)
     }
 
     private fun Any.toMyJson(): String? {

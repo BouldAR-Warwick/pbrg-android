@@ -17,8 +17,12 @@ import android.widget.Toast
 import com.example.pbrg_android.main.MainActivity
 import com.example.pbrg_android.databinding.ActivityLoginBinding
 import com.example.pbrg_android.Application
+import com.example.pbrg_android.R
 import com.example.pbrg_android.data.model.LoggedInUser
 import com.example.pbrg_android.register.RegisterActivity
+import com.example.pbrg_android.utility.LoginInfo
+import com.google.gson.Gson
+import com.tencent.mmkv.MMKV
 import javax.inject.Inject
 
 const val EXTRA_MESSAGE = "com.example.pbrg_android.MESSAGE"
@@ -44,18 +48,18 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        // Data binding
         val username = binding.username
         val password = binding.password
         val login = binding.login
         val signup = binding.signup
         val loading = binding.loading
         val stayLoggedIn = binding.stayLoggedIn
-
+        // Observe login form
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
 
-            // disable login button unless both username / password is valid
+            // disable login button unless both username and password are valid
             login.isEnabled = loginState.isDataValid
 
             if (loginState.usernameError != null) {
@@ -65,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                 password.error = getString(loginState.passwordError)
             }
         })
-
+        // Observe login result
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
@@ -74,14 +78,18 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
+                // Store user info if login was successful and stayLoggedIn is true
+                var loginInfo: LoginInfo = LoginInfo(loginResult.success.uid, loginResult.success.displayName, 254800L)
+                var kv: MMKV = MMKV.defaultMMKV()
+                kv.encode("login_info", Gson().toJson(loginInfo))
+                // Navigate to login page with username
                 updateUiWithUser(loginResult.success)
             }
             setResult(Activity.RESULT_OK)
-
             //Complete and destroy login activity once successful
             finish()
         })
-
+        // Username checker
         val usernameChecker = Runnable{
             if (System.currentTimeMillis() > lastTextEdit + delay - 500) {
                 loginViewModel.usernameChanged(username.text.toString())
@@ -91,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
         }
-
+        // Password checker
         val passwordChecker = Runnable{
             if (System.currentTimeMillis() > lastTextEdit + delay - 500) { loginViewModel.passwordChanged(password.text.toString())
                 loginViewModel.passwordChanged(password.text.toString())
@@ -103,14 +111,12 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-
         username.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 //avoid triggering event when text is empty
                 if (s.isNotEmpty()) {
                     lastTextEdit = System.currentTimeMillis()
                     handler.postDelayed(usernameChecker,delay)}
-
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -119,7 +125,6 @@ class LoginActivity : AppCompatActivity() {
 
             override fun beforeTextChanged(s: CharSequence, start: Int,count: Int, after: Int) {}
         })
-
 
         password.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
@@ -136,11 +141,13 @@ class LoginActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence, start: Int,count: Int, after: Int) {}
         })
 
+        // Navigate to sign up page
         signup!!.setOnClickListener{
-            val intent: Intent = Intent(this, RegisterActivity::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
 
+        // Login when "Enter" was pressed
         password.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE ->
@@ -153,7 +160,7 @@ class LoginActivity : AppCompatActivity() {
             false
         }
 
-
+        // Login!
         login.setOnClickListener {
             loading.visibility = View.VISIBLE
             loginViewModel.login(username.text.toString(), password.text.toString(), stayLoggedIn!!.isChecked)
@@ -163,13 +170,13 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUiWithUser(loggedInUser: LoggedInUser) {
         // Initiate successful logged in experience
         val displayName = loggedInUser.displayName
-        // display welcome popup
-//        val welcome = getString(R.string.welcome)
-//        Toast.makeText(
-//            applicationContext,
-//            "$welcome $displayName",
-//            Toast.LENGTH_LONG
-//        ).show()
+        // Display welcome popup
+        val welcome = getString(R.string.welcome)
+        Toast.makeText(
+            applicationContext,
+            "$welcome $displayName",
+            Toast.LENGTH_LONG
+        ).show()
         val intent = Intent(this, MainActivity::class.java).apply{
             putExtra(EXTRA_MESSAGE, displayName)
         }

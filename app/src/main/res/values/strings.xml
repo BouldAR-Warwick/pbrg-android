@@ -19,7 +19,7 @@
     <string name="action_sign_up">SIGN UP</string>
     <string name="action_sign_in"> Sign in </string>
     <string name="action_sign_in_short"> UP</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">"Welcome Back!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>

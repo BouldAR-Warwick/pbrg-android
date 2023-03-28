@@ -40,13 +40,15 @@
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value="com.example.pbrg_android.search.SearchActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.BootActivity" />
         </activity>
         <activity
             android:name=".activities.BootActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
