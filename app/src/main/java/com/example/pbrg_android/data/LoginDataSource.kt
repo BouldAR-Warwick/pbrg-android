@@ -58,7 +58,7 @@ class LoginDataSource @Inject constructor(private val context: Context) {
                     result = Result.Success(existingUser)
                 } catch (e: Throwable) {
                     println(e.message)
-                    // TODO: handle exception
+                    result = Result.Error(IOException("Error logging in", e))
                 }
 
             } catch (e: Throwable) {
@@ -69,9 +69,6 @@ class LoginDataSource @Inject constructor(private val context: Context) {
         }
     }
 
-    fun logout() {
-        // TODO: revoke authentication
-    }
 
     fun hash(input:String): String {
         val md = MessageDigest.getInstance("SHA-256")

@@ -84,10 +84,10 @@ class LoginActivity : AppCompatActivity() {
                 kv.encode("login_info", Gson().toJson(loginInfo))
                 // Navigate to login page with username
                 updateUiWithUser(loginResult.success)
+                setResult(Activity.RESULT_OK)
+                //Complete and destroy login activity once successful
+                finish()
             }
-            setResult(Activity.RESULT_OK)
-            //Complete and destroy login activity once successful
-            finish()
         })
         // Username checker
         val usernameChecker = Runnable{
@@ -167,6 +167,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Navigate to Main page with username
+     */
     private fun updateUiWithUser(loggedInUser: LoggedInUser) {
         // Initiate successful logged in experience
         val displayName = loggedInUser.displayName
@@ -177,12 +180,16 @@ class LoginActivity : AppCompatActivity() {
             "$welcome $displayName",
             Toast.LENGTH_LONG
         ).show()
+        // Navigate to Main page
         val intent = Intent(this, MainActivity::class.java).apply{
             putExtra(EXTRA_MESSAGE, displayName)
         }
         startActivity(intent)
     }
 
+    /**
+     * Extension function to simplify setting an afterTextChanged action to EditText components.
+     */
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }

@@ -26,7 +26,7 @@ class BootActivity : BaseActivity() {
 
         val handler : Handler = Handler(Looper.getMainLooper())
         var kv: MMKV = MMKV.defaultMMKV()
-        if (kv.containsKey("login_info")){
+        if (kv.containsKey("login_info") && kv.containsKey("sessionID")){
             // Login info cached
             Application.login_info = kv.decodeString("login_info")!!.toMyObject<LoginInfo>()[0]
             // Fetch sessionID
