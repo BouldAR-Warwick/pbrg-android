@@ -79,7 +79,9 @@ class LoginActivity : AppCompatActivity() {
             }
             if (loginResult.success != null) {
                 // Store user info if login was successful and stayLoggedIn is true
-                var loginInfo: LoginInfo = LoginInfo(loginResult.success.uid, loginResult.success.displayName, 254800L)
+                var loginInfo: LoginInfo = LoginInfo(loginResult.success.uid,
+                    loginResult.success.displayName,
+                    System.currentTimeMillis() + 604800000L)
                 var kv: MMKV = MMKV.defaultMMKV()
                 kv.encode("login_info", Gson().toJson(loginInfo))
                 // Navigate to login page with username
@@ -188,12 +190,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     /**
-     * Extension function to simplify setting an afterTextChanged action to EditText components.
+     * Prompt login failed
      */
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
-
 
 }
 

@@ -21,40 +21,56 @@ class BootActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
-
         (application as Application).appComponent.loginComponent().create().inject(this)
 
-        val handler : Handler = Handler(Looper.getMainLooper())
+        val handler = Handler(Looper.getMainLooper())
         var kv: MMKV = MMKV.defaultMMKV()
         if (kv.containsKey("login_info") && kv.containsKey("sessionID")){
             // Login info cached
             Application.login_info = kv.decodeString("login_info")!!.toMyObject<LoginInfo>()[0]
-            // Fetch sessionID
-            val sessionID = kv.decodeString("sessionID")
-            // Create user component with cached user info and session ID
-            loginViewModel.login(LoggedInUser(Application.login_info.username, Application.login_info.uid,
-                sessionID!!
-            ))
-            // Navigate to main page
-            handler.postDelayed(Runnable {
-                run {
-                    val displayName = Application.login_info.username
-                    // display welcome popup
-                    val welcome = getString(R.string.welcome)
-                    Toast.makeText(
-                        applicationContext,
-                        "$welcome $displayName",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    val intent = Intent(this, MainActivity::class.java).apply{
-                        putExtra(EXTRA_MESSAGE, displayName)
+            // Check if cached info has expired
+            if (Application.login_info.expireTime > System.currentTimeMillis()){
+                // Fetch sessionID
+                val sessionID = kv.decodeString("sessionID")
+                // Create user component with cached user info and session ID
+                loginViewModel.login(LoggedInUser(Application.login_info.username,
+                                                  Application.login_info.uid,
+                                                  sessionID!!))
+                // Navigate to main page
+                handler.postDelayed(Runnable {
+                    run {
+                        val displayName = Application.login_info.username
+                        // Display welcome popup
+                        val welcome = getString(R.string.welcome)
+                        Toast.makeText(
+                            applicationContext,
+                            "$welcome $displayName",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        // Navigate to Main page
+                        val intent = Intent(this, MainActivity::class.java).apply{
+                            putExtra(EXTRA_MESSAGE, displayName)
+                        }
+                        startActivity(intent)
+                        this.finish()
                     }
-                    startActivity(intent)
-                    this.finish()
-                }
-            }, 1000L)
-        } else {
-            // otherwise initialise login_info
+                }, 1000L)
+            } else {
+                // Initialise login_info
+                Application.login_info = LoginInfo()
+                // Navigate to log in page
+                handler.postDelayed(Runnable {
+                    run {
+                        val intent = Intent(Intent.ACTION_VIEW)
+                        intent.addCategory("login")
+                        startActivity(intent)
+                        finish()
+                    }
+                }, 1000L)
+            }
+        }
+        else {
+            // Initialise login_info
             Application.login_info = LoginInfo()
             // Navigate to log in page
             handler.postDelayed(Runnable {
@@ -66,8 +82,6 @@ class BootActivity : BaseActivity() {
                 }
             }, 1000L)
         }
-
-        loginViewModel.checkLoginStatus()
 
     }
 }
