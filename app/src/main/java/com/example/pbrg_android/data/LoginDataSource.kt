@@ -33,6 +33,7 @@ class LoginDataSource @Inject constructor(private val context: Context) {
             var result: Result<LoggedInUser>
             try {
                 val data = JSONObject(Gson().toJson(loginData))
+                println("=====================$data")
                 val url = "$baseUrl/Login"
                 // POST request
                 val requestQueue = Volley.newRequestQueue(context)

@@ -66,7 +66,7 @@ class RouteVisARActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     private val backgroundRenderer: BackgroundRenderer = BackgroundRenderer()
     private val augmentedImageRenderer: AugmentedImageRenderer = AugmentedImageRenderer()
     private var shouldConfigureSession = false
-    private var holdDataArray : Array<HoldData> = emptyArray()
+    private var holdDataArray : FloatArray = FloatArray(0)
 
     // Augmented image configuration and rendering.
     // Load a single image (true) or a pre-generated image database (false).
@@ -77,7 +77,8 @@ class RouteVisARActivity : AppCompatActivity(), GLSurfaceView.Renderer {
     private val augmentedImageMap: MutableMap<Int, Pair<AugmentedImage, Anchor>> = HashMap()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        holdDataArray = intent.getSerializableExtra("holdDataArray") as Array<HoldData>
+//        holdDataArray = intent.getSerializableExtra("holdDataArray") as Array<HoldData>
+        holdDataArray = intent.getFloatArrayExtra("holdDataArray")!!
 
         setContentView(R.layout.activity_route_vis_ar)
         surfaceView = findViewById<GLSurfaceView>(R.id.surface_view)

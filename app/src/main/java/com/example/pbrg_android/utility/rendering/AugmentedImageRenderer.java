@@ -79,7 +79,7 @@ public class AugmentedImageRenderer {
       AugmentedImage augmentedImage,
       Anchor centerAnchor,
       float[] colorCorrectionRgba,
-      HoldData[] holdDataArray) {
+      float[] holdDataArray) {
     float[] tintColor =
         convertHexToColor(TINT_COLORS_HEX[augmentedImage.getIndex() % TINT_COLORS_HEX.length]);
 
@@ -137,15 +137,22 @@ public class AugmentedImageRenderer {
     pyramidRenderer.updateModelMatrix(modelMatrix, mazeScaleFactor);
     pyramidRenderer.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
     // Render route
-    HoldData[] fakeholdDataArray = {new HoldData(0.1f, 0.1f)
-            , new HoldData(0.2f, 0.2f)
-            , new HoldData(0.5f, 0.5f)
-            , new HoldData(0.1f, 0.7f)
-            , new HoldData(0.8f, 0.9f)
-    };
-    for (int i = 0; i < fakeholdDataArray.length; i++) {
-      Float x = fakeholdDataArray[i].getX();
-      Float y = fakeholdDataArray[i].getY();
+//    HoldData[] fakeholdDataArray = {new HoldData(0.1f, 0.1f)
+//            , new HoldData(0.2f, 0.2f)
+//            , new HoldData(0.5f, 0.5f)
+//            , new HoldData(0.1f, 0.7f)
+//            , new HoldData(0.8f, 0.9f)
+//    };
+//    {"x": 0.21353383458646616, "y": 0.844574780058651},
+//    {"x": 0.29172932330827067, "y": 0.793743890518084},
+//    {"x": 0.29172932330827067, "y": 0.6412512218963832},
+//    {"x": 0.5263157894736842, "y": 0.5395894428152492},
+//    {"x": 0.3699248120300752, "y": 0.4887585532746823},
+//    {"x": 0.7609022556390977, "y": 0.3362658846529814},
+//    {"x": 0.6045112781954888, "y": 0.13294232649071358}
+    for (int i = 0; i < holdDataArray.length; i+=2) {
+      float x = (float) holdDataArray[i];
+      float y = (float) holdDataArray[i+1];
 
       mazeModelLocalOffset = Pose.makeTranslation(
               (x-0.5f) * augmentedImage.getExtentX(),

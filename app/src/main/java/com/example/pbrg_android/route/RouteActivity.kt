@@ -7,14 +7,10 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.data.model.HoldData
-import com.example.pbrg_android.data.model.RouteListItem
 import com.example.pbrg_android.databinding.ActivityRouteBinding
 import com.example.pbrg_android.routeVis.RouteVisARActivity
 import com.example.pbrg_android.utility.Result
-import com.google.android.material.transition.Hold
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class RouteActivity : AppCompatActivity(){
@@ -57,17 +53,25 @@ class RouteActivity : AppCompatActivity(){
         difficulty.text = "V${intent.getIntExtra("difficulty", -1).toString()}"
 
 
-        // Get route image
-//        getRouteSequence(routeImage, routeID)
 
         // Get route image with route info highlighted
-        val routeInfo : Array<HoldData> =  getRouteInfo(routeID)
+//        getRouteSequence(routeImage, routeID)
+
+        var routeInfo : Array<HoldData> = arrayOf()
+        getRoute(routeID)
+
+        println("Route Info ===========================")
+        for (hold in routeInfo) {
+            println("$hold.x, $hold.y")
+        }
 
         viewAR.setOnClickListener {
-            val intent = Intent(this, RouteVisARActivity::class.java).apply{
-                putExtra("holdDataArray", routeInfo)
+            var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
+            GlobalScope.launch(Dispatchers.IO) {
+               getRouteInfo(routeID)
             }
-            startActivity(intent)
+
+
         }
 
         deleteRoute.setOnClickListener {
@@ -98,24 +102,40 @@ class RouteActivity : AppCompatActivity(){
             }
         }
     }
-    private fun getRouteInfo(routeID: Int) : Array<HoldData>{
-        var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
+
+    private fun getRoute(routeID: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             var result: Result<Int> = routeViewModel.getRoute(routeID)
             if (result is Result.Success) {
                 println("got selected route")
-                routeInfo = routeViewModel.getRouteInfo(routeID)
-
             } else {
-                println("Error getting selected route info")
+                println("Error getting selected route")
             }
         }
-        if (routeInfo is Result.Success) {
-            return (routeInfo as Result.Success<Array<HoldData>>).data
-        } else {
-            println("Error getting route info")
-            return emptyArray()
+    }
+
+    private suspend fun getRouteInfo(routeID: Int) {
+        var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
+        val value = GlobalScope.async {
+            routeInfo = routeViewModel.getRouteInfo(routeID)
         }
 
+        value.await()
+        if (routeInfo is Result.Success) {
+            val holdDataArray = (routeInfo as Result.Success<Array<HoldData>>).data
+            val floatHoldArray : FloatArray = FloatArray(holdDataArray.size*2)
+            for (i in holdDataArray.indices) {
+                floatHoldArray[2*i] = holdDataArray[i].x.toFloat()
+                floatHoldArray[2*i+1] = holdDataArray[i].y.toFloat()
+            }
+            val intent = Intent(this, RouteVisARActivity::class.java).apply{
+                putExtra("holdDataArray", floatHoldArray)
+            }
+            startActivity(intent)
+        } else {
+            println("Error getting route info")
+        }
     }
+
+
 }

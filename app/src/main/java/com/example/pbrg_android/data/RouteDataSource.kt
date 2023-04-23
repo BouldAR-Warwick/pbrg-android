@@ -138,19 +138,22 @@ class RouteDataSource @Inject constructor(private val context: Context) {
                 result = try {
                     val response: JSONObject = future.get()
                     val jsonArray = response.get("info") as JSONArray
-
+                    println("Received route info = ==================================")
                     var holdList: Array<HoldData> = Array(jsonArray.length()) {
                         val routeInfo = jsonArray.getJSONObject(it)
-                        HoldData(routeInfo.getDouble("x") as Float, routeInfo.getDouble("y") as Float)
+                        println(routeInfo)
+                        HoldData(routeInfo.getDouble("x"), routeInfo.getDouble("y"))
                     }
 
                     Result.Success(holdList)
 
                 } catch (e: Throwable) {
+                    println(e.message)
                     Result.Error(IOException("Error fetching route info", e))
                 }
 
             } catch (e: Throwable) {
+                println(e.message)
                 result = Result.Error(IOException("Error fetching route info", e))
             }
 

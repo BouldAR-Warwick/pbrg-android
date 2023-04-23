@@ -10,6 +10,7 @@ import android.widget.*
 import com.example.pbrg_android.utility.Result
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.R
+import com.example.pbrg_android.data.model.HoldData
 import com.example.pbrg_android.databinding.ActivityRouteGenBinding
 import com.example.pbrg_android.routeVis.RouteVisARActivity
 import com.tencent.mmkv.MMKV
@@ -44,6 +45,7 @@ class RouteGenActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         var difficulty = -1
+        var routeId = -1
         val spinner: Spinner = binding.selectDifficulty
         val generate = binding.generate
         val viewInAR = binding.viewInAr
@@ -81,33 +83,63 @@ class RouteGenActivity : AppCompatActivity() {
 
         // Generate route
         generate.setOnClickListener {
-            //TODO: generate route
-
             // Get selected difficulty
             GlobalScope.launch(Dispatchers.IO) {
-                val result : Result<Bitmap> = routeGenViewModel.generateRoute(difficulty)
+                // Generate route with selected difficulty, returns route id
+                val result : Result<Int> = routeGenViewModel.generateRoute(difficulty)
                 if (result is Result.Success) {
+                    val routeID = result.data
+                    val resultImage : Result<Bitmap> = routeGenViewModel.getRouteImage(routeID)
                     // Update route image
-                    runOnUiThread {
-                        val imageView = findViewById<ImageView>(R.id.routeImage)
-                        imageView.setImageBitmap(result.data)
+                    if (resultImage is Result.Success){
+                        runOnUiThread {
+                            val imageView = findViewById<ImageView>(R.id.routeImage)
+                            imageView.setImageBitmap(resultImage.data)
+                        }
+                        // Enable "View route in AR" button
+                        viewInAR.isEnabled = true
+                        routeId = routeID
                     }
-                    // Enable "View route in AR" button
-                    viewInAR.isEnabled = true
-
+                    else {
+                        runOnUiThread {
+                            Toast.makeText(applicationContext, "Error updating route image", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
                     runOnUiThread {
-                        Toast.makeText(applicationContext, "Error generating and updating route", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Error generating route", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
 
+        var routeInfo : Array<HoldData> = arrayOf<HoldData>()
+
         // Navigate to View in AR page
         viewInAR.setOnClickListener {
-            val intent = Intent(this, RouteVisARActivity::class.java).apply{
+            // query route info
+            GlobalScope.launch(Dispatchers.IO) {
+                // Generate route with selected difficulty, returns route id
+                val result : Result<Array<HoldData>> = routeGenViewModel.getRouteInfo(routeId)
+                if (result is Result.Success) {
+                    // Update route info
+                    routeInfo = result.data
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Error retrieving route information", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
-            startActivity(intent)
+
+            // Navigate to route visualisation with the route info.
+            if (routeInfo.isNotEmpty()){
+                println("Route Info ===========================")
+                println(routeInfo)
+                val intent = Intent(this, RouteVisARActivity::class.java).apply{
+                    putExtra("holdDataArray", routeInfo)
+                }
+                startActivity(intent)
+            }
         }
 
     }
