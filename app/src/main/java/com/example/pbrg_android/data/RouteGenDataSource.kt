@@ -71,7 +71,7 @@ class RouteGenDataSource @Inject constructor(private val context: Context) {
 
             try {
                 val data = JSONObject("""{"difficulty":$difficulty}""")
-                val url = "$baseUrl/GenerateRouteServlet"
+                val url = "$baseUrl/GenerateRoute"
 
                 val requestQueue = Volley.newRequestQueue(context)
                 var future: RequestFuture<JSONObject> = RequestFuture.newFuture()

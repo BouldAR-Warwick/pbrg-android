@@ -166,7 +166,7 @@ class RouteDataSource @Inject constructor(private val context: Context) {
             var result: Result<Int>
 
             try {
-                val data = JSONObject("""{}""")
+                val data = JSONObject("""{"rid":0}""")
                 val url = "$baseUrl/DeleteRoute"
 
                 val requestQueue = Volley.newRequestQueue(context)

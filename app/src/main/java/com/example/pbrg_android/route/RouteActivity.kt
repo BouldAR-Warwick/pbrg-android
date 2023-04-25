@@ -72,6 +72,8 @@ class RouteActivity : AppCompatActivity(){
 
         deleteRoute.setOnClickListener {
             routeViewModel.deleteRoute()
+            // Back to wall page
+            finish()
         }
     }
 
