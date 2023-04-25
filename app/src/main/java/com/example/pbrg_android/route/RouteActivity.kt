@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pbrg_android.Application
 import com.example.pbrg_android.data.model.HoldData
@@ -43,7 +44,6 @@ class RouteActivity : AppCompatActivity(){
         val difficulty = binding.difficulty
         val viewAR = binding.viewAR
         val deleteRoute = binding.deleteRoute
-        val commentRoute = binding.commentRoute
         val routeImage = binding.routeImage
 
         selectedGymName.text = intent.getStringExtra("selectedGym")
@@ -53,9 +53,8 @@ class RouteActivity : AppCompatActivity(){
         difficulty.text = "V${intent.getIntExtra("difficulty", -1).toString()}"
 
 
-
         // Get route image with route info highlighted
-//        getRouteSequence(routeImage, routeID)
+        getRouteImage(routeImage, routeID)
 
         var routeInfo : Array<HoldData> = arrayOf()
         getRoute(routeID)
@@ -66,39 +65,34 @@ class RouteActivity : AppCompatActivity(){
         }
 
         viewAR.setOnClickListener {
-            var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
             GlobalScope.launch(Dispatchers.IO) {
                getRouteInfo(routeID)
             }
-
-
         }
 
         deleteRoute.setOnClickListener {
             routeViewModel.deleteRoute()
         }
-
-        commentRoute.setOnClickListener {
-            //TODO: Add comment functionality
-        }
-
     }
 
-    private fun getRouteSequence(routeImage: ImageView, routeID: Int) {
+    private fun getRouteImage(routeImage: ImageView, routeID: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             var result: Result<Int> = routeViewModel.getRoute(routeID)
             if (result is Result.Success) {
-                println("got selected route")
                 var imageResult: Result<Bitmap> = routeViewModel.getRouteImage(routeID)
                 if (imageResult is Result.Success) {
                     runOnUiThread {
                         routeImage.setImageBitmap(imageResult.data)
                     }
                 } else {
-                    println("Error getting route image")
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Error updating route image", Toast.LENGTH_SHORT).show()
+                    }
                 }
             } else {
-                println("Error getting selected route")
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Error getting selected route", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

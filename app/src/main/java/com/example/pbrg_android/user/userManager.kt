@@ -37,7 +37,7 @@ class UserManager @Inject constructor(
 
     var user: LoggedInUser? = null
         private set
-    val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
+    val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0"
 
     fun isUserLoggedIn() = userComponent != null
 

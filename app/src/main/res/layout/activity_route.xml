@@ -64,26 +64,12 @@
         android:text="@string/view_route_in_AR"
         android:textAllCaps="false"
         android:background="@drawable/bg_white"
-        app:layout_constraintBottom_toTopOf="@+id/commentRoute"
+        app:layout_constraintBottom_toTopOf="@+id/deleteRoute"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/routeImage" />
 
-    <Button
-        android:id="@+id/commentRoute"
-        android:layout_width="180dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/comment_route"
-        android:textAllCaps="false"
-        android:background="@drawable/bg_white"
-        app:layout_constraintBottom_toTopOf="@+id/deleteRoute"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewAR" />
 
     <Button
         android:id="@+id/deleteRoute"
@@ -98,7 +84,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentRoute" />
+        app:layout_constraintTop_toBottomOf="@+id/viewAR" />
 
     <ImageView
         android:id="@+id/routeImage"

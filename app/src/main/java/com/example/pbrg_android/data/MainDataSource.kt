@@ -23,7 +23,6 @@ class MainDataSource @Inject constructor(private val context: Context) {
         return withContext(Dispatchers.IO) {
             var result: Result<Bitmap>
             try {
-                val data = JSONObject("""{}""") // empty data
                 val url = "$baseUrl/GetWallImage"
 
                 val requestQueue = Volley.newRequestQueue(context)

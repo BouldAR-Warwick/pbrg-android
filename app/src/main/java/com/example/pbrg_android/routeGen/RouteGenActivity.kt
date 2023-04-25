@@ -16,6 +16,7 @@ import com.example.pbrg_android.routeVis.RouteVisARActivity
 import com.tencent.mmkv.MMKV
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -66,7 +67,7 @@ class RouteGenActivity : AppCompatActivity() {
             spinner.adapter = adapter
         }
 
-        // Set up wall image
+        // Set up original wall image
         routeImage.setImageBitmap(routeGenViewModel.readWallImage())
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -78,7 +79,6 @@ class RouteGenActivity : AppCompatActivity() {
                 difficulty = position-1
                 generate.isEnabled = position != 0
             }
-
         }
 
         // Generate route
@@ -89,16 +89,18 @@ class RouteGenActivity : AppCompatActivity() {
                 val result : Result<Int> = routeGenViewModel.generateRoute(difficulty)
                 if (result is Result.Success) {
                     val routeID = result.data
-                    val resultImage : Result<Bitmap> = routeGenViewModel.getRouteImage(routeID)
-                    // Update route image
-                    if (resultImage is Result.Success){
-                        runOnUiThread {
-                            val imageView = findViewById<ImageView>(R.id.routeImage)
-                            imageView.setImageBitmap(resultImage.data)
+                    var getRouteResult : Result<Int> = routeGenViewModel.getRoute(routeID)
+                    if (getRouteResult is Result.Success) {
+                        val resultImage : Result<Bitmap> = routeGenViewModel.getRouteImage(routeID)
+                        // Update route image
+                        if (resultImage is Result.Success){
+                            runOnUiThread {
+                                routeImage.setImageBitmap(resultImage.data)
+                                // Enable "View route in AR" button
+                                viewInAR.isEnabled = true
+                            }
+                            routeId = routeID
                         }
-                        // Enable "View route in AR" button
-                        viewInAR.isEnabled = true
-                        routeId = routeID
                     }
                     else {
                         runOnUiThread {
@@ -113,34 +115,64 @@ class RouteGenActivity : AppCompatActivity() {
             }
         }
 
-        var routeInfo : Array<HoldData> = arrayOf<HoldData>()
-
         // Navigate to View in AR page
         viewInAR.setOnClickListener {
             // query route info
             GlobalScope.launch(Dispatchers.IO) {
-                // Generate route with selected difficulty, returns route id
-                val result : Result<Array<HoldData>> = routeGenViewModel.getRouteInfo(routeId)
-                if (result is Result.Success) {
-                    // Update route info
-                    routeInfo = result.data
-                } else {
-                    runOnUiThread {
-                        Toast.makeText(applicationContext, "Error retrieving route information", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                getRouteInfo(routeId)
+
             }
 
-            // Navigate to route visualisation with the route info.
-            if (routeInfo.isNotEmpty()){
-                println("Route Info ===========================")
-                println(routeInfo)
-                val intent = Intent(this, RouteVisARActivity::class.java).apply{
-                    putExtra("holdDataArray", routeInfo)
-                }
-                startActivity(intent)
-            }
         }
 
     }
+
+    private suspend fun getRouteInfo(routeID: Int) {
+        var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
+        val value = GlobalScope.async {
+            routeInfo = routeGenViewModel.getRouteInfo(routeID)
+        }
+
+        value.await()
+        if (routeInfo is Result.Success) {
+            val holdDataArray = (routeInfo as Result.Success<Array<HoldData>>).data
+            val floatHoldArray : FloatArray = FloatArray(holdDataArray.size*2)
+            for (i in holdDataArray.indices) {
+                floatHoldArray[2*i] = holdDataArray[i].x.toFloat()
+                floatHoldArray[2*i+1] = holdDataArray[i].y.toFloat()
+            }
+            val intent = Intent(this, RouteVisARActivity::class.java).apply{
+                putExtra("holdDataArray", floatHoldArray)
+            }
+            startActivity(intent)
+        } else {
+            runOnUiThread {
+                Toast.makeText(
+                    applicationContext,
+                    "Error retrieving route information",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun getRouteImage(routeID: Int) {
+//        var getRouteResult : Result<Int> = routeGenViewModel.getRoute(routeID)
+//        if (getRouteResult is Result.Success) {
+//            val resultImage : Result<Bitmap> = routeGenViewModel.getRouteImage(routeID)
+//            // Update route image
+//            if (resultImage is Result.Success){
+//                runOnUiThread {
+//                    val imageView = findViewById<ImageView>(R.id.routeImage)
+//                    imageView.setImageBitmap(resultImage.data)
+//                }
+//            }
+//        }
+//        else {
+//            runOnUiThread {
+//                Toast.makeText(applicationContext, "Error updating route image", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+    }
+
 }

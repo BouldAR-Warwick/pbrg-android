@@ -17,7 +17,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val mainDataSource: MainDataSource) : ViewModel() {
-    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
+    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0"
 
     /**
      * Fetch primary gym

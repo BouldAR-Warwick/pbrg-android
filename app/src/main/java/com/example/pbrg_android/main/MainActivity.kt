@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity(){
                 }
             } else {
                 // Fetch wall image of selected gym
-                var imageResult: Result<Bitmap> = mainViewModel.getWallImage()
+                var imageResult : Result<Bitmap> = mainViewModel.getWallImage()
                 // Display wall image of selected gym
                 if (imageResult is Result.Success) {
                     mainViewModel.storeWallImage(imageResult.data)

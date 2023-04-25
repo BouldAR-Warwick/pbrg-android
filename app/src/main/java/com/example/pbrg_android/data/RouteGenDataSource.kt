@@ -20,6 +20,49 @@ import javax.inject.Inject
 class RouteGenDataSource @Inject constructor(private val context: Context) {
 
     /**
+     * Fetch route via HTTP POST request
+     * */
+    suspend fun getRoute(baseUrl : String, routeID: Int): Result<Int> {
+        return withContext(Dispatchers.IO) {
+            var result: Result<Int>
+
+            try {
+                val data = JSONObject("""{"routeID":$routeID}""")
+                val url = "$baseUrl/GetRoute"
+
+                val requestQueue = Volley.newRequestQueue(context)
+                var future: RequestFuture<JSONObject> = RequestFuture.newFuture()
+                val jsonObjRequest: JsonObjectRequest = object: JsonObjectRequest(
+                    Method.POST, url, data, future, future){
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val sessionId: String = ConnectViaSession(context).getSession()!!
+                        return if(sessionId != "") {
+                            var headers: MutableMap<String, String> = mutableMapOf<String, String>()
+                            headers["Cookie"] = "JSESSIONID=$sessionId"
+                            headers
+                        } else {
+                            super.getHeaders()
+                        }
+                    }
+                }
+                requestQueue.add(jsonObjRequest)
+
+                result = try {
+//                    val response: JSONObject = future.get()
+                    Result.Success(1)
+                } catch (e: Throwable) {
+                    Result.Error(IOException("Error fetching selected gym", e))
+                }
+
+            } catch (e: Throwable) {
+                result = Result.Error(IOException("Error fetching selected gym", e))
+            }
+
+            result
+        }
+    }
+
+    /**
      * Generate route via HTTP POST request
      * */
     suspend fun generateRoute(baseUrl : String, difficulty : Int) : Result<Int> {
@@ -51,7 +94,7 @@ class RouteGenDataSource @Inject constructor(private val context: Context) {
 
                 result = try {
                     val response: JSONObject = future.get()
-                    Result.Success(response.getInt("routeID"))
+                    Result.Success(response.getInt("routeId"))
                 } catch (e: Throwable) {
                     println(e.message)
                     Result.Error(IOException("Error generating route", e))
@@ -72,7 +115,6 @@ class RouteGenDataSource @Inject constructor(private val context: Context) {
             var result: Result<Bitmap>
 
             try {
-                val data = JSONObject("""{"routeID":$routeID}""")
                 val url = "$baseUrl/GetRouteImage"
 
                 val requestQueue = Volley.newRequestQueue(context)

@@ -83,7 +83,7 @@ public class AugmentedImageRenderer {
     float[] tintColor =
         convertHexToColor(TINT_COLORS_HEX[augmentedImage.getIndex() % TINT_COLORS_HEX.length]);
 
-    final float mazeEdgeSize = 10.0f; // Magic number of torus size
+    final float mazeEdgeSize = 30.0f; // Magic number of torus size
     final float maxImageEdgeSize = Math.max(augmentedImage.getExtentX(), augmentedImage.getExtentZ()); // Get largest detected image edge size
     float mazeScaleFactor = maxImageEdgeSize / mazeEdgeSize; // scale to set Maze to image size
     Log.e("Maze scale factor", "" + mazeScaleFactor);

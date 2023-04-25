@@ -13,7 +13,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataSource) : ViewModel(){
-    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
+    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0"
 
     suspend fun getRoute(routeID: Int): Result<Int> {
         return withContext(Dispatchers.IO) {

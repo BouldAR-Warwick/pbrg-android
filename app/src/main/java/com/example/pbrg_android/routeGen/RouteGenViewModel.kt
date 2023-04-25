@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RouteGenViewModel@Inject constructor(private val routeGenDataSource: RouteGenDataSource) : ViewModel() {
-    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0-SNAPSHOT"
+    private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0"
 
     fun readWallImage(): Bitmap? {
         var kv: MMKV = MMKV.defaultMMKV()
@@ -24,6 +24,13 @@ class RouteGenViewModel@Inject constructor(private val routeGenDataSource: Route
         var result: Result<Int>
         return withContext(Dispatchers.IO) {
             result = routeGenDataSource.generateRoute(baseUrl, difficulty)
+            result
+        }
+    }
+
+    suspend fun getRoute(routeID: Int): Result<Int> {
+        return withContext(Dispatchers.IO) {
+            var result: Result<Int> = routeGenDataSource.getRoute(baseUrl, routeID)
             result
         }
     }
