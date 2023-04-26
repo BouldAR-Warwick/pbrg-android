@@ -109,6 +109,9 @@ class RouteGenDataSource @Inject constructor(private val context: Context) {
         }
     }
 
+    /**
+     * Fetch route image via HTTP POST request
+     * */
     suspend fun getRouteImage(baseUrl : String, routeID : Int) : Result<Bitmap> {
 
         return withContext(Dispatchers.IO) {

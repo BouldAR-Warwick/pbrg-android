@@ -53,13 +53,12 @@ class RouteActivity : AppCompatActivity(){
         difficulty.text = "V${intent.getIntExtra("difficulty", -1).toString()}"
 
 
-        // Get route image with route info highlighted
+        // Get route image with route highlighted
         getRouteImage(routeImage, routeID)
 
         var routeInfo : Array<HoldData> = arrayOf()
         getRoute(routeID)
 
-        println("Route Info ===========================")
         for (hold in routeInfo) {
             println("$hold.x, $hold.y")
         }
@@ -77,6 +76,27 @@ class RouteActivity : AppCompatActivity(){
         }
     }
 
+    /**
+     * Fetch selected route
+     * */
+    private fun getRoute(routeID: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            var result: Result<Int> = routeViewModel.getRoute(routeID)
+            if (result is Result.Success) {
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Got selected route", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Error getting selected route", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    /**
+     * Fetch and update the labelled route image
+     * */
     private fun getRouteImage(routeImage: ImageView, routeID: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             var result: Result<Int> = routeViewModel.getRoute(routeID)
@@ -99,17 +119,9 @@ class RouteActivity : AppCompatActivity(){
         }
     }
 
-    private fun getRoute(routeID: Int) {
-        GlobalScope.launch(Dispatchers.IO) {
-            var result: Result<Int> = routeViewModel.getRoute(routeID)
-            if (result is Result.Success) {
-                println("got selected route")
-            } else {
-                println("Error getting selected route")
-            }
-        }
-    }
-
+    /**
+     * Fetch the route information before entering the AR session
+     * */
     private suspend fun getRouteInfo(routeID: Int) {
         var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
         val value = GlobalScope.async {
@@ -120,16 +132,20 @@ class RouteActivity : AppCompatActivity(){
         if (routeInfo is Result.Success) {
             val holdDataArray = (routeInfo as Result.Success<Array<HoldData>>).data
             val floatHoldArray : FloatArray = FloatArray(holdDataArray.size*2)
+            // Convert route information to float array
             for (i in holdDataArray.indices) {
                 floatHoldArray[2*i] = holdDataArray[i].x.toFloat()
                 floatHoldArray[2*i+1] = holdDataArray[i].y.toFloat()
             }
+            // Navigate to visualization in AR
             val intent = Intent(this, RouteVisARActivity::class.java).apply{
                 putExtra("holdDataArray", floatHoldArray)
             }
             startActivity(intent)
         } else {
-            println("Error getting route info")
+            runOnUiThread {
+                Toast.makeText(applicationContext, "Error getting route info", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

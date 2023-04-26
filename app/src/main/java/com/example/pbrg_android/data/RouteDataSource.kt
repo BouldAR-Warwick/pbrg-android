@@ -161,6 +161,9 @@ class RouteDataSource @Inject constructor(private val context: Context) {
         }
     }
 
+    /**
+     * Delete current route via HTTP POST request
+     * */
     suspend fun deleteRoute(baseUrl : String): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int>

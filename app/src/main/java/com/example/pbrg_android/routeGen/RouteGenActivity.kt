@@ -55,7 +55,7 @@ class RouteGenActivity : AppCompatActivity() {
         selectedGymName.text = intent.getStringExtra("selectedGym")
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        // Populate difficulties choices 0-13
+        // Populate difficulties choices (V0-13)
         ArrayAdapter.createFromResource(
             this,
             R.array.route_difficulties,
@@ -120,13 +120,14 @@ class RouteGenActivity : AppCompatActivity() {
             // query route info
             GlobalScope.launch(Dispatchers.IO) {
                 getRouteInfo(routeId)
-
             }
-
         }
 
     }
 
+    /**
+     * Fetch generated route info
+     * */
     private suspend fun getRouteInfo(routeID: Int) {
         var routeInfo : Result<Array<HoldData>> = Result.Error(Exception("Error getting route info"))
         val value = GlobalScope.async {
@@ -148,31 +149,9 @@ class RouteGenActivity : AppCompatActivity() {
         } else {
             runOnUiThread {
                 Toast.makeText(
-                    applicationContext,
-                    "Error retrieving route information",
-                    Toast.LENGTH_SHORT
-                ).show()
+                    applicationContext,"Error retrieving route information", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun getRouteImage(routeID: Int) {
-//        var getRouteResult : Result<Int> = routeGenViewModel.getRoute(routeID)
-//        if (getRouteResult is Result.Success) {
-//            val resultImage : Result<Bitmap> = routeGenViewModel.getRouteImage(routeID)
-//            // Update route image
-//            if (resultImage is Result.Success){
-//                runOnUiThread {
-//                    val imageView = findViewById<ImageView>(R.id.routeImage)
-//                    imageView.setImageBitmap(resultImage.data)
-//                }
-//            }
-//        }
-//        else {
-//            runOnUiThread {
-//                Toast.makeText(applicationContext, "Error updating route image", Toast.LENGTH_SHORT).show()
-//            }
-//        }
     }
 
 }

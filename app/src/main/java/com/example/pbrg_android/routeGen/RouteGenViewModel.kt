@@ -14,12 +14,18 @@ import javax.inject.Inject
 class RouteGenViewModel@Inject constructor(private val routeGenDataSource: RouteGenDataSource) : ViewModel() {
     private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0"
 
+    /**
+     * Read stored wall image from MMKV local storage
+     * */
     fun readWallImage(): Bitmap? {
         var kv: MMKV = MMKV.defaultMMKV()
         val byteArray = kv.decodeBytes("wallImage")
         return  BitmapFactory.decodeByteArray(byteArray, 0, byteArray!!.size)
     }
 
+    /**
+     * Generate route of the selected difficulty
+     * */
     suspend fun generateRoute(difficulty : Int) : Result<Int> {
         var result: Result<Int>
         return withContext(Dispatchers.IO) {
@@ -28,6 +34,9 @@ class RouteGenViewModel@Inject constructor(private val routeGenDataSource: Route
         }
     }
 
+    /**
+     * Fetch generated route
+     * */
     suspend fun getRoute(routeID: Int): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int> = routeGenDataSource.getRoute(baseUrl, routeID)
@@ -35,6 +44,9 @@ class RouteGenViewModel@Inject constructor(private val routeGenDataSource: Route
         }
     }
 
+    /**
+     * Fetch generated route image
+     * */
     suspend fun getRouteImage(routeID : Int) : Result<Bitmap> {
         var result: Result<Bitmap>
         return withContext(Dispatchers.IO) {
@@ -43,6 +55,9 @@ class RouteGenViewModel@Inject constructor(private val routeGenDataSource: Route
         }
     }
 
+    /**
+     * Fetch generated route information
+     * */
     suspend fun getRouteInfo(routeID: Int): Result<Array<HoldData>> {
         var result: Result<Array<HoldData>>
         return withContext(Dispatchers.IO) {

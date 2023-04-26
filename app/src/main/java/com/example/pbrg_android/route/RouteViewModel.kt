@@ -15,13 +15,19 @@ import javax.inject.Inject
 class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataSource) : ViewModel(){
     private val baseUrl = "https://grabourg.dcs.warwick.ac.uk/webservices-1.0"
 
+    /**
+     * Fetch selected route
+     * */
     suspend fun getRoute(routeID: Int): Result<Int> {
         return withContext(Dispatchers.IO) {
             var result: Result<Int> = routeDataSource.getRoute(baseUrl, routeID)
             result
         }
     }
-    
+
+    /**
+     * Fetch selected route image
+     * */
     suspend fun getRouteImage(routeID: Int): Result<Bitmap> {
         var result: Result<Bitmap>
         return withContext(Dispatchers.IO) {
@@ -30,6 +36,9 @@ class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataS
         }
     }
 
+    /**
+     * Fetch selected route information
+     * */
     suspend fun getRouteInfo(routeID: Int): Result<Array<HoldData>> {
         var result: Result<Array<HoldData>>
         return withContext(Dispatchers.IO) {
@@ -38,6 +47,9 @@ class RouteViewModel @Inject constructor(private val routeDataSource: RouteDataS
         }
     }
 
+    /**
+     * Delete selected route
+     * */
     fun deleteRoute(): Result<Int> {
         var result: Result<Int> = Result.Error(IOException("Error deleting route"))
         GlobalScope.launch(Dispatchers.IO) {

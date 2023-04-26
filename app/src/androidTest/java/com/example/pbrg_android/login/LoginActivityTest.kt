@@ -8,7 +8,6 @@ import android.view.KeyEvent
 import android.view.View
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
-
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.annotation.DrawableRes

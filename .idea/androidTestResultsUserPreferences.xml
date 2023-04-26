@@ -72,6 +72,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-284059806">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="New_Device_API_33" value="120" />
+                  <entry key="Pixel_6_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="249981720">
           <value>
             <AndroidTestResultsTableState>
@@ -120,6 +134,19 @@
                   <entry key="BPN0219104002423" value="120" />
                   <entry key="Duration" value="90" />
                   <entry key="HUAWEI&#10; EML-L09" value="120" />
+                  <entry key="Pixel_6_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1119817664">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
                   <entry key="Pixel_6_API_33" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
